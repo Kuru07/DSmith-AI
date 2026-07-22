@@ -32,6 +32,6 @@ def health():
 @app.post("/analyze")
 def analyze(request: AnalyzeRequest):
     return {
-        "message": f"Recieved Dataset, {request.filename}!"
+        "message": f"Received Dataset, {request.filename}!"
     }
 

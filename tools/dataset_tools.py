@@ -2,14 +2,17 @@ from pathlib import Path
 import pandas as pd
 
 def inspect_dataset(file_path:str) -> dict:
+    """Inspect and profile a CSV dataset. Returns dataset shape, column data types, missing/unique values count, a numeric statistics summary (mean, median, min, max), low-cardinality column details, and the first few sample rows."""
     path=Path(file_path)
 
+    # Verify if the specified dataset file exists
     if not path.exists():
         return {
             "success":"False",
             "error": "Dataset does not exist."
         }
 
+    # Ensure the file format is CSV
     if path.suffix.lower() != ".csv" :
         return {
             "success": "False",
@@ -17,12 +20,15 @@ def inspect_dataset(file_path:str) -> dict:
         }
 
     try:
+        # Load the CSV file into a pandas DataFrame
         df = pd.read_csv(path)
 
+        # Select numeric columns to perform mathematical profiling
         numeric_df = df.select_dtypes(include="number")
 
         numeric_summary={}
 
+        # Calculate mean, median, min, and max for each numeric column
         for column in numeric_df.columns:
             numeric_summary[column]= {
                 "mean": float(numeric_df[column].mean())
@@ -40,6 +46,7 @@ def inspect_dataset(file_path:str) -> dict:
 
         low_cardinality_columns = []
 
+        # Find categorical or discrete columns with <= 20 unique values
         for column in df.columns:
             unique_count = df[column].nunique()
 
@@ -55,6 +62,7 @@ def inspect_dataset(file_path:str) -> dict:
                     )
                 })
 
+        # Return full dataset profile metadata
         return {
             "success": True,
             "file_name": path.name,

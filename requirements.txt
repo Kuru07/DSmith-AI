@@ -1,17 +1,17 @@
 # Web Framework & Server
-fastapi[standard]==0.115.4
-uvicorn[standard]==0.32.0
-python-multipart==0.0.20
-pydantic==2.10.1
+fastapi[standard]~=0.115.4
+uvicorn[standard]~=0.32.0
+python-multipart~=0.0.20
+pydantic~=2.10.1
 
 # Orchestration & LangChain Ecosystem
-langchain==0.3.7
-langgraph==0.2.45
-langchain-google-genai==2.0.4
+langchain~=0.3.7
+langgraph~=0.2.45
+langchain-google-genai~=2.0.7
 
 # Data Processing & Machine Learning
-pandas==2.2.3
-scikit-learn==1.5.2
+pandas~=2.2.3
+scikit-learn~=1.5.2
 
 # Environment & Utilities
-python-dotenv==1.0.1
+python-dotenv~=1.0.1

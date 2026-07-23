@@ -1,37 +1,19 @@
 import json
 
 from tools.dataset_tools import inspect_dataset
+from tools.code_validator import validate_generated_code
 
+# Unsafe code string to test validator security checks
+code = """
+import subprocess
 
-print("\n==============================")
-print("ORIGINAL DATASET")
-print("==============================")
+subprocess.run(["something"])
+"""
 
-original = inspect_dataset(
-    "workspace/test_run/input.csv"
+# Run the validator on the unsafe code snippet
+valid_output=validate_generated_code.func(
+    code
 )
 
-print(
-    json.dumps(
-        original,
-        indent=2,
-        default=str
-    )
-)
-
-
-print("\n==============================")
-print("CLEANED DATASET")
-print("==============================")
-
-cleaned = inspect_dataset(
-    "workspace/test_run/cleaned.csv"
-)
-
-print(
-    json.dumps(
-        cleaned,
-        indent=2,
-        default=str
-    )
-)
+# Output validation result
+print(valid_output)

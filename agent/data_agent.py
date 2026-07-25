@@ -30,7 +30,8 @@ structured_model = model.with_structured_output(
 )
 
 def generate_cleaning_code_from_profile(
-    profile: dict
+    profile: dict,
+    target_column: str
 ) -> CleaningResult:
 
     profile_json = json.dumps(
@@ -48,20 +49,37 @@ appropriate preprocessing plan.
 
 You must also generate executable Python code.
 
-RULES:
+TARGET COLUMN:
+{target_column}
+
+TARGET HANDLING RULES:
+- The target column is the supervised-learning label.
+- Never impute missing values in the target column.
+- Never create synthetic values for the target.
+- Never derive features from the target column.
+- Never drop the target column.
+- If the target contains missing values, drop only the
+  rows where the target value is missing.
+- Feature preprocessing must not use information derived
+  from the target.
+- The target may remain unchanged in cleaned.csv because
+  it will be separated from features during ML training.
+
+GENERAL RULES:
 - Use only columns that actually exist.
 - Never invent dataset statistics.
 - Read the dataset from "input.csv".
 - Save the processed dataset as "cleaned.csv".
 - Use pandas for preprocessing.
-- Preserve the target column.
 - Do not train any ML models yet.
 - Do not delete rows or columns unless clearly justified.
+- Identifier or PII columns may be removed from features
+  when clearly inappropriate for modelling.
 - Keep preprocessing conservative.
 - The generated code must run as a standalone script.
 - Print a short preprocessing summary after execution.
 
-Dataset profile:
+DATASET PROFILE:
 
 {profile_json}
 """
@@ -233,6 +251,7 @@ repair_model = model.with_structured_output(
 
 def repair_cleaning_code(
     profile: dict,
+    target_column: str,
     previous_code: str,
     error_message: str
 ) -> RepairResult:
@@ -243,6 +262,9 @@ You are repairing Python preprocessing code generated
 by an autonomous data science agent.
 
 The previous code failed.
+
+TARGET COLUMN:
+{target_column}
 
 DATASET PROFILE:
 {json.dumps(profile, indent=2, default=str)}
@@ -255,7 +277,18 @@ ACTUAL ERROR:
 
 Generate corrected Python code.
 
-Rules:
+TARGET RULES:
+- The target column is "{target_column}".
+- Never impute missing target values.
+- Never generate synthetic target values.
+- Never derive features from the target.
+- Never drop the target column.
+- If the target contains missing values, drop only rows
+  where the target value is missing.
+- Do not use target-derived information for feature
+  preprocessing.
+
+GENERAL RULES:
 - Fix the actual cause of the failure.
 - Do not invent columns.
 - Read only "input.csv".
@@ -264,9 +297,6 @@ Rules:
 - Do not train models.
 - Do not access the network.
 - Do not use subprocesses.
-- Preserve the original target and dataset unless
-  preprocessing clearly requires otherwise.
 - Return a complete standalone script.
 """
-
     return repair_model.invoke(prompt)

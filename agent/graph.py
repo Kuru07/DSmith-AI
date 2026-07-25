@@ -67,7 +67,8 @@ def generate_node(state: AgentState) -> dict:
     print("\n[NODE] GENERATE")
 
     decision = generate_cleaning_code_from_profile(
-        state["dataset_profile"]
+        state["dataset_profile"],
+        target_column=state["target_column"]
     )
 
     return {
@@ -215,7 +216,8 @@ def repair_node(state: AgentState) -> dict:
     repaired = repair_cleaning_code(
         profile=state["dataset_profile"],
         previous_code=state["generated_code"],
-        error_message=state["error_message"]
+        error_message=state["error_message"],
+        target_column=state["target_column"]
     )
 
     print(

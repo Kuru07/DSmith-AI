@@ -12,6 +12,7 @@ This is a FastAPI-based backend service that serves as the entry point for the a
 - **Automatic Docs**: Interactive documentation generated via Swagger UI.
 - **Dataset Analysis**: Core tool suite to inspect, clean, and profile CSV datasets.
 - **Python Execution Engine**: Utility to safely execute custom Python scripts locally with configurable timeouts.
+- **Autonomous Workflow**: LangGraph-based state machine for generating, validating, executing, and repairing dataset cleaning code.
 
 ---
 
@@ -25,6 +26,13 @@ DSmith AI/
 ├── main.py              # Main FastAPI application
 ├── requirements.txt     # Project dependencies
 ├── README.md            # Project documentation (this file)
+├── models/              # Data models and structured output schemas
+│   ├── __init__.py
+│   └── schemas.py       # Pydantic schemas for LLM responses
+├── agent/               # Core agent logic and workflows
+│   ├── __init__.py
+│   ├── data_agent.py    # LLM interaction for data cleaning
+│   └── graph.py         # LangGraph state machine workflow
 ├── tests/               # Testing suite
 │   ├── __init__.py
 │   └── test_tools.py    # Scripts to test dataset and code execution utilities
@@ -56,6 +64,14 @@ Provides the `execute_python_code(code: str, working_directory: str, timeout_sec
 - Captures `stdout`, `stderr`, and exit status codes.
 - Implements a configurable execution timeout.
 - Automatically cleans up the temporary files after execution.
+
+### 3. Agent Workflow (`agent/graph.py`)
+Implements an autonomous LangGraph state machine that:
+- Inspects dataset profiles.
+- Generates python preprocessing code via LLMs.
+- Validates generated code against dangerous imports and functions.
+- Executes code safely in an isolated workspace.
+- Verifies successful execution and attempts self-repair if needed.
 
 ---
 

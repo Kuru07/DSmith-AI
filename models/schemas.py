@@ -1,3 +1,5 @@
+"""Pydantic models and schemas for structured LLM outputs."""
+
 # pyrefly: ignore [missing-import]
 from pydantic import BaseModel, Field
 

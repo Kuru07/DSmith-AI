@@ -26,6 +26,44 @@ structured_model = model.with_structured_output(
     CleaningResult
 )
 
+def generate_cleaning_code_from_profile(
+    profile: dict
+) -> CleaningResult:
+
+    profile_json = json.dumps(
+        profile,
+        indent=2,
+        default=str
+    )
+
+    prompt = f"""
+You are the preprocessing component of an autonomous
+data science agent.
+
+Analyze the dataset profile below and create an
+appropriate preprocessing plan.
+
+You must also generate executable Python code.
+
+RULES:
+- Use only columns that actually exist.
+- Never invent dataset statistics.
+- Read the dataset from "input.csv".
+- Save the processed dataset as "cleaned.csv".
+- Use pandas for preprocessing.
+- Preserve the target column.
+- Do not train any ML models yet.
+- Do not delete rows or columns unless clearly justified.
+- Keep preprocessing conservative.
+- The generated code must run as a standalone script.
+- Print a short preprocessing summary after execution.
+
+Dataset profile:
+
+{profile_json}
+"""
+
+    return structured_model.invoke(prompt)
 
 def generate_cleaning_code(
     file_path: str
@@ -181,3 +219,51 @@ def run_cleaning_agent(
         "execution": execution,
         "cleaned_profile": cleaned_profile
     }
+
+class RepairResult(BaseModel):
+    explanation: str
+    generated_code: str
+
+
+repair_model = model.with_structured_output(
+    RepairResult
+)
+
+def repair_cleaning_code(
+    profile: dict,
+    previous_code: str,
+    error_message: str
+) -> RepairResult:
+
+    prompt = f"""
+You are repairing Python preprocessing code generated
+by an autonomous data science agent.
+
+The previous code failed.
+
+DATASET PROFILE:
+{json.dumps(profile, indent=2, default=str)}
+
+FAILED CODE:
+{previous_code}
+
+ACTUAL ERROR:
+{error_message}
+
+Generate corrected Python code.
+
+Rules:
+- Fix the actual cause of the failure.
+- Do not invent columns.
+- Read only "input.csv".
+- Save the result as "cleaned.csv".
+- Use pandas.
+- Do not train models.
+- Do not access the network.
+- Do not use subprocesses.
+- Preserve the original target and dataset unless
+  preprocessing clearly requires otherwise.
+- Return a complete standalone script.
+"""
+
+    return repair_model.invoke(prompt)

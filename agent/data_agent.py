@@ -1,5 +1,7 @@
+"""LLM-powered data cleaning, analysis, and repair functions for the autonomous data science agent."""
 import os
-import json 
+import json
+
 from dotenv import load_dotenv
 # pyrefly: ignore [missing-import]
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -10,13 +12,14 @@ from models.schemas import CleaningResult
 from tools.code_validator import validate_generated_code
 from tools.python_executor import execute_python_code
 from tools.workspace import create_workspace
+from models.schemas import RepairResult
 
 # Load environmental variables from .env file
 load_dotenv()
 
 # Initialize the Gemini model for structured and text output
 model = ChatGoogleGenerativeAI(
-    model="gemini-3.5-flash",
+    model="gemini-3.5-flash-lite",
     google_api_key=os.getenv("GEMINI_API_KEY"),
     temperature=0
 )
@@ -220,11 +223,10 @@ def run_cleaning_agent(
         "cleaned_profile": cleaned_profile
     }
 
-class RepairResult(BaseModel):
-    explanation: str
-    generated_code: str
 
 
+
+# Configure model to return a structured RepairResult schema
 repair_model = model.with_structured_output(
     RepairResult
 )
@@ -234,6 +236,7 @@ def repair_cleaning_code(
     previous_code: str,
     error_message: str
 ) -> RepairResult:
+    """Ask the LLM to fix a failed data-cleaning script given the error and original profile."""
 
     prompt = f"""
 You are repairing Python preprocessing code generated

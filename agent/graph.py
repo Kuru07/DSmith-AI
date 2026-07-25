@@ -1,5 +1,5 @@
 """LangGraph state machine definition for the autonomous data cleaning workflow."""
-
+import json
 from typing import TypedDict, Optional
 from pathlib import Path
 
@@ -11,36 +11,44 @@ from langgraph.graph import (
 )
 
 from tools.dataset_tools import inspect_dataset
-from agent.data_agent import generate_cleaning_code_from_profile
+from agent.data_agent import generate_cleaning_code_from_profile,repair_cleaning_code
 from tools.code_validator import validate_generated_code
 from tools.python_executor import execute_python_code
-from agent.data_agent import repair_cleaning_code
 from tools.workspace import create_workspace
+from agent.ml_agent import analyze_ml_problem,generate_training_code, repair_training_code
+from models.schemas import AgentState
 
 
-class AgentState(TypedDict, total=False):
-    """State definition for the autonomous data cleaning agent workflow."""
-    input_path: str
-    workspace: str
 
-    dataset_profile: dict
+def analyze_ml_node(
+    state: AgentState
+) -> dict:
+    """Determines problem type and selects baseline ML models using the LLM."""
+    print("\n[NODE] ANALYZE ML PROBLEM")
 
-    summary: str
-    cleaning_plan: list[str]
-    generated_code: str
+    decision = analyze_ml_problem(
+        dataset_profile=state["cleaned_profile"],
+        target_column=state["target_column"]
+    )
 
-    validation_error: Optional[str]
-    execution_result: dict
+    return {
+        "problem_type": decision.problem_type,
+        "problem_reasoning": decision.reasoning,
+        "selected_models": decision.selected_models
+    }
 
-    cleaned_profile: dict
+def validate_target(
+    profile: dict,
+    target_column: str
+) -> bool:
+    """Returns True if the target column exists in the dataset profile."""
 
-    error_message: Optional[str]
+    columns = [
+        column["name"]
+        for column in profile["columns"]
+    ]
 
-    retry_count: int
-    max_retries: int
-
-    success: bool
-
+    return target_column in columns
 
 def inspect_node(state: AgentState) -> dict:
     """Inspects the input dataset to generate a profile."""
@@ -247,6 +255,149 @@ def fail_node(state: AgentState) -> dict:
         "success": False
     }
 
+def generate_training_node(
+    state: AgentState
+) -> dict:
+    """Generates a Python training script via LLM based on the cleaned dataset profile."""
+    print("\n[NODE] GENERATE TRAINING CODE")
+
+    result = generate_training_code(
+        dataset_profile=state["cleaned_profile"],
+        target_column=state["target_column"],
+        problem_type=state["problem_type"],
+        selected_models=state["selected_models"]
+    )
+
+
+    return {
+        "training_code": result.generated_code,
+        "error_message": None
+    }
+
+def execute_training_node(
+    state: AgentState
+) -> dict:
+    """Executes the generated training script in the isolated workspace."""
+    print("\n[NODE] EXECUTE TRAINING")
+
+    result = execute_python_code(
+        code=state["training_code"],
+        working_directory=state["workspace"],
+        timeout_seconds=120
+    )
+
+    if result["success"]:
+        return {
+            "training_result": result,
+            "error_message": None
+        }
+
+    return {
+        "training_result": result,
+        "error_message": (
+            result.get("stderr")
+            or result.get("error")
+            or "Unknown training error"
+        )
+    }
+
+def verify_training_node(
+    state: AgentState
+) -> dict:
+    """Verifies that metrics.json and best_model.joblib were created after training."""
+    print("\n[NODE] VERIFY TRAINING")
+
+    workspace = Path(
+        state["workspace"]
+    )
+
+    metrics_path = (
+        workspace / "metrics.json"
+    )
+
+    model_path = (
+        workspace / "best_model.joblib"
+    )
+
+    if not metrics_path.exists():
+        return {
+            "success": False,
+            "error_message":
+                "metrics.json was not created."
+        }
+
+    if not model_path.exists():
+        return {
+            "success": False,
+            "error_message":
+                "best_model.joblib was not created."
+        }
+
+    with open(
+        metrics_path,
+        "r",
+        encoding="utf-8"
+    ) as file:
+
+        metrics = json.load(file)
+
+    return {
+        "metrics": metrics,
+        "best_model": metrics.get(
+            "best_model"
+        ),
+        "success": True,
+        "error_message": None
+    }
+
+def repair_training_node(
+    state: AgentState
+) -> dict:
+    """Asks the LLM to fix a failed training script and increments the retry counter."""
+    print("\n[NODE] REPAIR TRAINING")
+
+    retry_count = (
+        state.get("training_retry_count", 0) + 1
+    )
+
+    repaired = repair_training_code(
+        dataset_profile=state["cleaned_profile"],
+        target_column=state["target_column"],
+        problem_type=state["problem_type"],
+        selected_models=state["selected_models"],
+        previous_code=state["training_code"],
+        error_message=state["error_message"]
+    )
+
+    print(
+        f"Training repair attempt {retry_count}"
+    )
+
+    return {
+        "training_code": repaired.generated_code,
+        "training_retry_count": retry_count,
+        "error_message": None
+    }
+
+def validate_training_node(state: AgentState) -> dict:
+    """Validates generated training code for security and syntax before execution."""
+    print("\n[NODE] VALIDATE TRAINING")
+
+    result = validate_generated_code(
+        state["training_code"]
+    )
+
+    if result["valid"]:
+        return {
+            "validation_error": None,
+            "error_message": None
+        }
+
+    return {
+        "validation_error": result["reason"],
+        "error_message": result["reason"]
+    }
+
 def route_validation(state: AgentState) -> str:
 
     if not state.get("validation_error"):
@@ -270,6 +421,50 @@ def route_execution(state: AgentState) -> str:
         return "fail"
 
     return "repair"
+
+def route_training_validation(state: AgentState) -> str:
+    """Routes after training validation: execute if valid, repair or fail otherwise."""
+
+    if not state.get("validation_error"):
+        return "execute_training"
+
+    retries = state.get(
+        "training_retry_count",
+        0
+    )
+
+    max_retries = state.get(
+        "max_training_retries",
+        3
+    )
+
+    if retries >= max_retries:
+        return "fail"
+
+    return "repair_training"
+
+def route_training_execution(
+    state: AgentState
+) -> str:
+    """Routes after training execution: verify if succeeded, repair or fail otherwise."""
+
+    if state["training_result"]["success"]:
+        return "verify_training"
+
+    retries = state.get(
+        "training_retry_count",
+        0
+    )
+
+    max_retries = state.get(
+        "max_training_retries",
+        3
+    )
+
+    if retries >= max_retries:
+        return "fail"
+
+    return "repair_training"
 
 def build_graph():
     """Builds and compiles the LangGraph state machine."""
@@ -311,6 +506,36 @@ def build_graph():
         fail_node
     )
 
+    builder.add_node(
+    "analyze_ml",
+    analyze_ml_node
+)
+
+    builder.add_node(
+        "generate_training",
+        generate_training_node
+    )
+
+    builder.add_node(
+        "validate_training",
+        validate_training_node
+    )
+
+    builder.add_node(
+        "execute_training",
+        execute_training_node
+    )
+
+    builder.add_node(
+        "repair_training",
+        repair_training_node
+    )
+
+    builder.add_node(
+        "verify_training",
+        verify_training_node
+    )
+
     builder.add_edge(
         START,
         "inspect"
@@ -325,6 +550,22 @@ def build_graph():
         "generate",
         "validate"
     )
+
+    builder.add_edge(
+    "analyze_ml",
+    "generate_training"
+    )
+
+    builder.add_edge(
+        "generate_training",
+        "validate_training"
+    )
+
+    builder.add_edge(
+        "repair_training",
+        "validate_training"
+    )
+    
 
     builder.add_conditional_edges(
         "validate",
@@ -346,6 +587,16 @@ def build_graph():
         }
     )
 
+    builder.add_conditional_edges(
+    "execute_training",
+    route_training_execution,
+    {
+        "verify_training": "verify_training",
+        "repair_training": "repair_training",
+        "fail": "fail"
+    }
+    )
+
     builder.add_edge(
         "repair",
         "validate"
@@ -355,8 +606,18 @@ def build_graph():
         "verify",
         route_verification,
         {
-            "done": END,
+            "done": "analyze_ml",
             "repair": "repair",
+            "fail": "fail"
+        }
+    )
+
+    builder.add_conditional_edges(
+        "validate_training",
+        route_training_validation,
+        {
+            "execute_training": "execute_training",
+            "repair_training": "repair_training",
             "fail": "fail"
         }
     )
@@ -374,7 +635,8 @@ graph = build_graph()
 
 
 def run_autonomous_cleaning(
-    file_path: str
+    file_path: str,
+    target_column: str
 ):
     """Entry point to execute the autonomous data cleaning workflow on a given file."""
 
@@ -389,8 +651,12 @@ def run_autonomous_cleaning(
     initial_state: AgentState = {
         "input_path": str(input_path),
         "workspace": str(workspace),
-        "retry_count": 0,
-        "max_retries": 3,
+        "cleaning_retry_count": 0,
+        "max_cleaning_retries": 3,
+        "target_column": target_column,
+        "training_retry_count": 0,
+        "max_training_retries": 3,
+        
         "success": False
     }
 

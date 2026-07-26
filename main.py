@@ -6,15 +6,20 @@ Handles file upload validation, dataset inspection, and dispatches the
 full cleaning + ML training pipeline via the LangGraph agent graph.
 
 Endpoints:
-    GET  /         → Service identity and status
-    GET  /health   → Health check
-    POST /analyze  → Full autonomous cleaning + ML pipeline
+    GET  /                              → Service identity and status
+    GET  /health                        → Health check
+    POST /analyze                       → Full autonomous cleaning + ML pipeline
+    GET  /download/{job_id}/cleaned     → Download the cleaned dataset CSV
+    GET  /download/{job_id}/model       → Download the trained model (.joblib)
 """
 
+from uuid import UUID
 from typing import final
 import shutil
 from pathlib import Path
 from uuid import uuid4
+from fastapi.responses import FileResponse
+from tools.cleanup import cleanup_expired_workspaces
 
 from fastapi import (
     FastAPI,
@@ -89,6 +94,10 @@ def analyze_dataset(
     9. Evaluate models
     10. Return the best model and metrics
     """
+
+    # Opportunistic cleanup: delete stale workspaces from previous jobs
+    # before starting a new one. Avoids needing a background scheduler.
+    cleanup_expired_workspaces()
 
     # -----------------------------------------------------
     # 1. Validate filename — reject requests with no file
@@ -249,6 +258,15 @@ def analyze_dataset(
             target_column=target_column,
         )
 
+        # Extract the UUID-named job directory from the result so we can
+        # build download URLs that the client can use to fetch artifacts.
+        workspace_path = Path(
+            result["workspace"]
+        )
+
+        # The workspace directory name IS the job ID (a UUID string)
+        job_id = workspace_path.name
+
 
         # -------------------------------------------------
         # 11. Handle agent-level failure
@@ -353,6 +371,17 @@ def analyze_dataset(
                         0,
                     ),
             },
+            # Pre-built download URLs for the artifacts produced by this job.
+            # The workspace is retained on disk for WORKSPACE_EXPIRY_SECONDS
+            # (1 hour) so the client has time to fetch them.
+            "downloads": {
+
+                "cleaned_dataset":
+                    f"/download/{job_id}/cleaned",
+
+                "trained_model":
+                    f"/download/{job_id}/model",
+            },
         }
 
     # -----------------------------------------------------
@@ -393,3 +422,103 @@ def analyze_dataset(
             print(
                 f"[CLEANUP] Deleted upload: {upload_path}"
             )
+
+# ---------------------------------------------------------
+# JOB ID VALIDATION HELPER
+# ---------------------------------------------------------
+
+def validate_job_id(job_id: str):
+    """
+    Validate that `job_id` is a well-formed UUID string.
+
+    The job ID doubles as the workspace directory name, so rejecting
+    malformed values prevents path-traversal attempts and gives the
+    client a clear error before any filesystem access occurs.
+
+    Raises:
+        HTTPException 400 — if the value is not a valid UUID.
+    """
+    try:
+        UUID(job_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid job ID."
+        )
+
+# ---------------------------------------------------------
+# DOWNLOAD ENDPOINTS
+# ---------------------------------------------------------
+
+@app.get("/download/{job_id}/cleaned")
+def download_cleaned_dataset(
+    job_id: str
+):
+    """
+    Download the cleaned CSV dataset produced by a completed analysis job.
+
+    The file is served from workspace/<job_id>/cleaned.csv — the output
+    written by the execute node of the LangGraph cleaning pipeline.
+
+    Returns:
+        200 + cleaned_dataset.csv  — file download
+        400                        — job_id is not a valid UUID
+        404                        — cleaned.csv not found (job may have
+                                     expired or the cleaning stage failed)
+    """
+    validate_job_id(job_id)
+
+    file_path = (
+        Path("workspace")
+        / job_id
+        / "cleaned.csv"
+    )
+
+    if not file_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Cleaned dataset not found."
+        )
+
+    return FileResponse(
+        path=file_path,
+        filename="cleaned_dataset.csv",
+        media_type="text/csv"
+    )
+
+@app.get("/download/{job_id}/model")
+def download_trained_model(
+    job_id: str
+):
+    """
+    Download the best trained model artifact produced by a completed job.
+
+    The file is served from workspace/<job_id>/best_model.joblib — a
+    joblib-serialised scikit-learn Pipeline written by the training script
+    during the ML stage. Load it with `joblib.load('best_model.joblib')`.
+
+    Returns:
+        200 + best_model.joblib    — file download (application/octet-stream)
+        400                        — job_id is not a valid UUID
+        404                        — model file not found (job may have
+                                     expired or the training stage failed)
+    """
+    validate_job_id(job_id)
+
+    file_path = (
+        Path("workspace")
+        / job_id
+        / "best_model.joblib"
+    )
+
+    if not file_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="Trained model not found."
+        )
+
+    return FileResponse(
+        path=file_path,
+        filename="best_model.joblib",
+        media_type="application/octet-stream"
+    )

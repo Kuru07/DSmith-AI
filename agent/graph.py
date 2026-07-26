@@ -641,24 +641,45 @@ def run_autonomous_cleaning(
     file_path: str,
     target_column: str
 ):
-    """Entry point to execute the autonomous data cleaning workflow on a given file."""
+    """
+    Public entry point — runs the full two-stage autonomous pipeline.
 
+    Creates an isolated UUID workspace, seeds it with a copy of the
+    uploaded dataset, builds the initial LangGraph state, and invokes
+    the compiled graph.  The result dict is returned directly to the
+    caller (main.py) which extracts job_id and builds download URLs.
+
+    Args:
+        file_path:     Absolute path to the uploaded CSV on disk.
+        target_column: Name of the supervised-learning target column.
+
+    Returns:
+        AgentState dict populated by the graph, including:
+            success, problem_type, best_model, metrics,
+            cleaning_retry_count, training_retry_count, workspace, …
+    """
+
+    # Create a fresh UUID-named workspace and copy the source CSV into
+    # it as input.csv — all generated scripts and artifacts live here.
     workspace = create_workspace(
         file_path
     )
 
-
     try:
-        input_path =( workspace / "input.csv")
+        # The execute node expects to find input.csv in the workspace root
+        input_path = workspace / "input.csv"
 
+        # Seed the shared state that every graph node reads from and writes to
         initial_state: AgentState = {
             "input_path": str(input_path),
             "workspace": str(workspace),
             "target_column": target_column,
 
+            # Cleaning stage retry budget (LLM repair loop)
             "cleaning_retry_count": 0,
             "max_cleaning_retries": 3,
 
+            # Training stage retry budget (LLM repair loop)
             "training_retry_count": 0,
             "max_training_retries": 3,
 
@@ -671,12 +692,19 @@ def run_autonomous_cleaning(
 
     finally:
         if workspace.exists():
-            shutil.rmtree(
-                workspace,
-                ignore_errors=False
-            )
-
-            print(
-                f"[CLEANUP] Deleted workspace: {workspace}"
-            )
-
+            # NOTE: Workspace cleanup is intentionally deferred.
+            # The workspace is kept on disk so that the download endpoints
+            # (GET /download/{job_id}/cleaned and GET /download/{job_id}/model)
+            # can serve cleaned.csv and best_model.joblib after this function
+            # returns.  Expired workspaces are removed by
+            # cleanup_expired_workspaces() at the start of the next request.
+            #
+            # To re-enable immediate cleanup, uncomment the block below:
+            # shutil.rmtree(
+            #     workspace,
+            #     ignore_errors=False
+            # )
+            # print(
+            #     f"[CLEANUP] Deleted workspace: {workspace}"
+            # )
+            print(f"[INFO] Workspace ready: {workspace}")

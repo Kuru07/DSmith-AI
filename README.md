@@ -19,6 +19,7 @@
 10. [API Reference](#api-reference)
 11. [Environment Variables](#environment-variables)
 12. [Tech Stack](#tech-stack)
+13. [Deployment](#deployment)
 
 ---
 
@@ -36,7 +37,8 @@ DSmith AI is a **FastAPI-based** autonomous agent backend. Given a CSV file uplo
 8. **Generates** a complete scikit-learn training script.
 9. **Trains** 2–3 baseline models on a held-out test split.
 10. **Exports** `metrics.json` and `best_model.joblib` to the job workspace.
-11. **Returns** a structured JSON response with results, metrics, and diagnostics.
+11. **Returns** a structured JSON response with results, metrics, and download URLs.
+12. **Serves** the cleaned dataset and trained model via dedicated download endpoints.
 
 ---
 
@@ -48,10 +50,12 @@ POST /analyze  (CSV file + target_column)
         ▼
 ┌──────────────────────────────────────────────────────┐
 │                      main.py                         │
+│  0. Cleanup expired workspaces (tools/cleanup.py)    │
 │  1. Validate file type (.csv only)                   │
 │  2. Validate target column exists                    │
 │  3. Save upload to uploads/<uuid>.csv                │
 │  4. Call run_autonomous_cleaning(file, target)       │
+│  5. Return JSON + /download/{job_id} URLs            │
 └──────────────────────┬───────────────────────────────┘
                        │
                        ▼
@@ -110,7 +114,7 @@ POST /analyze  (CSV file + target_column)
 DSmith AI/
 ├── .env                          # API keys (git-ignored)
 ├── .gitignore
-├── main.py                       # FastAPI application — upload, validate, dispatch
+├── main.py                       # FastAPI application — upload, validate, dispatch, download
 ├── requirements.txt              # Python dependencies
 ├── README.md                     # This file
 │
@@ -131,6 +135,7 @@ DSmith AI/
 │   ├── code_validator.py         # AST-based security and syntax validator
 │   ├── python_executor.py        # Subprocess-based isolated code runner
 │   ├── workspace.py              # Per-job UUID workspace creation
+│   ├── cleanup.py                # Expired workspace deletion (1-hour TTL)
 │   └── model_test.py             # Quick utility to inspect a saved joblib model
 │
 ├── tests/                        # Test suite
@@ -143,14 +148,14 @@ DSmith AI/
 │   ├── test_graph.py             # Integration test — full LangGraph pipeline (LLM)
 │   └── test_end_to_end.py        # HTTP integration tests via FastAPI TestClient (LLM)
 │
-├── uploads/                      # Uploaded CSVs saved here (git-ignored)
+├── uploads/                      # Uploaded CSVs saved here temporarily (git-ignored)
 └── workspace/                    # Auto-generated per-job workspaces (git-ignored)
     └── <uuid>/
         ├── input.csv             # Copy of the uploaded dataset
-        ├── cleaned.csv           # Cleaned output
+        ├── cleaned.csv           # Cleaned output (served by GET /download/{id}/cleaned)
         ├── generated_training.py # Saved training script
         ├── metrics.json          # Model evaluation metrics
-        └── best_model.joblib     # Best trained pipeline
+        └── best_model.joblib     # Best trained pipeline (served by GET /download/{id}/model)
 ```
 
 ---
@@ -237,6 +242,13 @@ Writes code to a temp file, executes it in a subprocess inside the workspace, an
 
 `create_workspace(source_file) -> Path`  
 Creates a unique UUID-named directory under `workspace/` and copies the source dataset as `input.csv`.
+
+---
+
+### `tools/cleanup.py`
+
+`cleanup_expired_workspaces() -> None`  
+Scans `workspace/` and deletes any subdirectory whose last modification time exceeds `WORKSPACE_EXPIRY_SECONDS` (default: 1 hour). Called at the start of every `/analyze` request — no background scheduler needed. Errors on individual directories are caught and logged so a single locked workspace cannot abort the sweep.
 
 ---
 
@@ -464,6 +476,10 @@ print(response.json())
   },
   "training": {
     "retries": 0
+  },
+  "downloads": {
+    "cleaned_dataset": "/download/<job_id>/cleaned",
+    "trained_model":   "/download/<job_id>/model"
   }
 }
 ```
@@ -472,7 +488,7 @@ print(response.json())
 
 | Status | Condition |
 |---|---|
-| `400` | No file provided, non-CSV file, empty target, file exceeds 20 MB, or target column not found in dataset |
+| `400` | No file provided, non-CSV file, empty target, or target column not found in dataset |
 | `413` | Uploaded file exceeds the 20 MB size limit |
 | `500` | Agent failed to complete analysis, or unexpected internal error |
 
@@ -487,6 +503,74 @@ print(response.json())
   }
 }
 ```
+
+---
+
+### `GET /download/{job_id}/cleaned`
+
+Download the cleaned CSV dataset produced by a completed analysis job.
+
+The workspace is retained on disk for **1 hour** after the job completes, giving the client time to fetch artifacts before they are deleted by the next cleanup sweep.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `job_id` | `string` (path) | UUID returned in the `/analyze` response `downloads.cleaned_dataset` field |
+
+**Example — cURL:**
+
+```bash
+curl -O "http://127.0.0.1:8000/download/<job_id>/cleaned"
+```
+
+**Example — Python:**
+
+```python
+response = requests.get(f"http://127.0.0.1:8000/download/{job_id}/cleaned")
+with open("cleaned_dataset.csv", "wb") as f:
+    f.write(response.content)
+```
+
+| Status | Condition |
+|---|---|
+| `200` | Returns `cleaned_dataset.csv` (`text/csv`) |
+| `400` | `job_id` is not a valid UUID |
+| `404` | File not found — job expired or cleaning stage failed |
+
+---
+
+### `GET /download/{job_id}/model`
+
+Download the best trained model artifact produced by a completed analysis job.
+
+The file is a joblib-serialised scikit-learn `Pipeline`. Load it with `joblib.load('best_model.joblib')`.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `job_id` | `string` (path) | UUID returned in the `/analyze` response `downloads.trained_model` field |
+
+**Example — cURL:**
+
+```bash
+curl -O "http://127.0.0.1:8000/download/<job_id>/model"
+```
+
+**Example — Python:**
+
+```python
+import joblib, requests
+
+response = requests.get(f"http://127.0.0.1:8000/download/{job_id}/model")
+with open("best_model.joblib", "wb") as f:
+    f.write(response.content)
+
+model = joblib.load("best_model.joblib")
+```
+
+| Status | Condition |
+|---|---|
+| `200` | Returns `best_model.joblib` (`application/octet-stream`) |
+| `400` | `job_id` is not a valid UUID |
+| `404` | File not found — job expired or training stage failed |
 
 ---
 
@@ -514,4 +598,14 @@ print(response.json())
 
 ---
 
-> **Workspaces:** Each job runs in an isolated `workspace/<uuid>/` directory. Concurrent runs never interfere with each other. The workspace contains `input.csv`, `cleaned.csv`, `generated_training.py`, `metrics.json`, and `best_model.joblib`.
+## Deployment
+
+
+
+Set the `GEMINI_API_KEY` environment variable in your hosting platform's settings panel.
+
+> **Ephemeral filesystems:** Platforms like Heroku use ephemeral disks — workspace files are lost on dyno restart. For persistent artifact storage, replace the `workspace/` directory writes with an object storage backend (e.g. AWS S3, Google Cloud Storage).
+
+---
+
+> **Workspace Lifecycle:** Each job runs in an isolated `workspace/<uuid>/` directory. Artifacts are kept for **1 hour** so clients can download them via the `/download` endpoints. On the next `/analyze` request, `cleanup_expired_workspaces()` removes any directories older than the TTL. Concurrent runs never interfere with each other.

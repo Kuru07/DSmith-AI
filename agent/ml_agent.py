@@ -89,10 +89,32 @@ MODELS:
 STRICT RULES:
 
 - Read "cleaned.csv".
+- cleaned.csv is a human-readable cleaned dataset and may
+  intentionally contain identifiers, names, emails, phone
+  numbers, dates, and other columns that should not
+  necessarily be used as model features.
+- Decide which columns are appropriate predictive features
+  before training.
+- Exclude obvious identifiers and PII-like columns from X
+  when they have no legitimate predictive meaning, such as
+  unique IDs, names, email addresses, and phone numbers.
+- Excluding a column from X MUST NOT modify cleaned.csv.
+- Do not blindly drop every categorical or text column.
+  Legitimate categorical predictors should be handled using
+  appropriate preprocessing such as OneHotEncoder.
+- Handle feature preprocessing inside a scikit-learn
+  Pipeline/ColumnTransformer where appropriate.
+- Fit learned preprocessing transformations using the
+  training data only to prevent data leakage.
+- For date columns, either exclude them when inappropriate
+  or derive justified date features inside the ML training
+  script. Do not modify cleaned.csv for this purpose.
 - Use pandas and scikit-learn.
 - Do not access the internet.
 - Do not install packages.
 - Do not use subprocess.
+- NEVER overwrite, modify, or resave "cleaned.csv".
+- Treat "cleaned.csv" as read-only input.
 - Separate features X and target y.
 - Prevent target leakage.
 - Handle categorical and numerical features properly.
@@ -103,6 +125,7 @@ STRICT RULES:
 - Evaluate every model on the SAME held-out test set.
 - Save the best trained pipeline to "best_model.joblib".
 - The script must run standalone.
+
 
 STRICT METRICS OUTPUT FORMAT:
 
@@ -212,6 +235,19 @@ STRICT RULES:
 - Preserve the target column.
 - Prevent target leakage.
 - Use a train/test split.
+- cleaned.csv must remain unchanged by the training script.
+- The cleaned dataset may contain identifiers and PII-like
+  columns because it is also a downloadable human-readable
+  artifact.
+- Exclude obvious identifiers, names, emails, phone numbers,
+  or other inappropriate columns from X when justified.
+- Excluding columns from model features must NOT delete or
+  modify those columns in cleaned.csv.
+- Do not blindly exclude categorical predictors.
+- Perform categorical encoding and other model-specific
+  transformations inside the ML pipeline.
+- Fit learned preprocessing using training data only to
+  prevent leakage.
 - Use pandas and scikit-learn.
 - Use only the selected models.
 - Handle numeric and categorical features appropriately.
@@ -219,6 +255,8 @@ STRICT RULES:
 - Do not install packages.
 - Do not use subprocess.
 - Do not invent columns.
+- NEVER overwrite, modify, or resave "cleaned.csv".
+- Treat "cleaned.csv" as read-only input.
 - Save the best trained pipeline to "best_model.joblib".
 
 STRICT METRICS OUTPUT FORMAT:

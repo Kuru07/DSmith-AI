@@ -41,43 +41,138 @@ def generate_cleaning_code_from_profile(
     )
 
     prompt = f"""
-You are the preprocessing component of an autonomous
+You are the DATA CLEANING component of an autonomous
 data science agent.
 
-Analyze the dataset profile below and create an
-appropriate preprocessing plan.
+Your responsibility is ONLY to improve data quality and
+produce a human-readable cleaned version of the original
+dataset.
 
-You must also generate executable Python code.
+You must generate:
+1. A conservative cleaning plan.
+2. Complete executable Python code implementing that plan.
+
+The output cleaned.csv is intended both for:
+- human download and inspection
+- later machine-learning processing
+
+Therefore, cleaned.csv MUST remain structurally close to
+the original dataset.
 
 TARGET COLUMN:
 {target_column}
 
-TARGET HANDLING RULES:
-- The target column is the supervised-learning label.
-- Never impute missing values in the target column.
-- Never create synthetic values for the target.
-- Never derive features from the target column.
-- Never drop the target column.
-- If the target contains missing values, drop only the
-  rows where the target value is missing.
-- Feature preprocessing must not use information derived
-  from the target.
-- The target may remain unchanged in cleaned.csv because
-  it will be separated from features during ML training.
+=========================================================
+STRICT SEPARATION OF RESPONSIBILITIES
+=========================================================
 
-GENERAL RULES:
+This stage performs DATA CLEANING ONLY.
+
+DO NOT perform machine-learning feature preprocessing.
+
+Specifically, DO NOT:
+
+- One-hot encode categorical columns.
+- Label encode categorical columns.
+- Ordinal encode columns for modelling.
+- Scale or normalize numerical columns.
+- Standardize numerical columns.
+- Create dummy variables.
+- Perform feature selection.
+- Perform dimensionality reduction.
+- Create polynomial features.
+- Convert categorical columns into model-ready numbers.
+- Drop identifier columns merely because they are poor
+  ML features.
+- Drop PII columns merely because they should not be used
+  for modelling.
+- Transform the dataset into a feature matrix.
+- Train or evaluate machine-learning models.
+
+Those operations belong exclusively to the ML training
+stage.
+
+=========================================================
+TARGET HANDLING RULES
+=========================================================
+
+The target column is the supervised-learning label.
+
+- Never impute missing target values.
+- Never generate synthetic target values.
+- Never derive features from the target.
+- Never encode the target for feature preprocessing.
+- Never drop the target column itself.
+- If the target contains missing values, drop ONLY rows
+  where the target value is missing.
+- Never use information from the target to clean feature
+  columns.
+
+The target should remain human-readable in cleaned.csv.
+
+=========================================================
+ALLOWED DATA CLEANING
+=========================================================
+
+Perform cleaning only when justified by the dataset
+profile.
+
+Examples of allowed operations include:
+
+- Filling missing NUMERIC FEATURE values using an
+  appropriate conservative statistic such as median.
+- Filling missing CATEGORICAL FEATURE values using an
+  appropriate conservative strategy such as mode or an
+  explicit "Unknown" category.
+- Removing exact duplicate rows when clearly detected.
+- Standardizing obvious whitespace inconsistencies.
+- Converting values to appropriate data types when safe.
+- Parsing date columns into datetime when appropriate.
+- Fixing clearly invalid or inconsistent representations
+  only when supported by the dataset profile.
+
+For date columns:
+
+- You may parse them into a consistent date representation.
+- DO NOT automatically create year/month/day feature
+  columns.
+- Preserve the original semantic information in a
+  human-readable form.
+
+=========================================================
+COLUMN PRESERVATION
+=========================================================
+
+Preserve original columns whenever possible.
+
+Identifier, name, email, phone, and other PII-like columns
+must NOT be removed simply because they are unsuitable for
+machine learning.
+
+The ML training stage will decide which columns should be
+excluded from model features.
+
+Only remove a column if there is a clear DATA QUALITY
+reason supported by the dataset profile, not merely a
+machine-learning reason.
+
+=========================================================
+CODE REQUIREMENTS
+=========================================================
+
 - Use only columns that actually exist.
 - Never invent dataset statistics.
-- Read the dataset from "input.csv".
-- Save the processed dataset as "cleaned.csv".
-- Use pandas for preprocessing.
-- Do not train any ML models yet.
-- Do not delete rows or columns unless clearly justified.
-- Identifier or PII columns may be removed from features
-  when clearly inappropriate for modelling.
+- Read only "input.csv".
+- Save the cleaned result as "cleaned.csv".
+- Use pandas.
 - Keep preprocessing conservative.
+- Preserve human readability.
+- Preserve the target column.
+- Do not access the network.
+- Do not use subprocesses.
+- Do not train ML models.
 - The generated code must run as a standalone script.
-- Print a short preprocessing summary after execution.
+- Print a short cleaning summary after execution.
 
 DATASET PROFILE:
 
@@ -142,26 +237,61 @@ def analyze_dataset(file_path:str):
     )
 
     prompt = f"""
-You are an autonomous data science agent.
+You are the DATA CLEANING analysis component of an
+autonomous data science agent.
 
-Analyze the following dataset profile.
+Analyze the dataset profile below.
 
-Your current task is ONLY to determine what data
-cleaning and preprocessing should be performed.
+Your task is ONLY to identify DATA QUALITY problems and
+recommend conservative cleaning operations.
 
-Do not invent columns or statistics.
-Use only information present in the profile.
+This stage produces a human-readable cleaned.csv that
+should remain structurally close to the original dataset.
+
+DO NOT recommend machine-learning feature preprocessing.
+
+Specifically, do not recommend:
+
+- One-hot encoding
+- Label encoding
+- Feature scaling
+- Normalization
+- Standardization
+- Feature selection
+- Dimensionality reduction
+- Creating dummy variables
+- Dropping identifiers because they are poor predictors
+- Dropping PII because it should not be used for modelling
+- Date feature engineering such as creating year/month/day
+- Model training
+
+Those responsibilities belong to the later ML stage.
+
+You MAY recommend genuine data-quality operations such as:
+
+- Handling missing feature values
+- Removing exact duplicate rows
+- Fixing safe data-type issues
+- Standardizing obvious whitespace inconsistencies
+- Parsing dates consistently
+- Fixing clearly supported representation problems
+
+Do not invent columns, statistics, outliers, duplicates,
+or inconsistencies that are not supported by the profile.
 
 Dataset profile:
 
 {profile_json}
 
 Explain:
-1. Important issues detected
-2. Cleaning actions required
-3. Why each action is appropriate
 
-Do not train a machine learning model yet.
+1. Important DATA QUALITY issues detected.
+2. Cleaning actions required.
+3. Why each cleaning action is appropriate.
+4. Which issues should be left for the ML preprocessing
+   stage instead of modifying cleaned.csv.
+
+Do not generate or train a machine-learning model.
 """
 
     # Generate a readable analysis explanation using the text model
@@ -258,10 +388,15 @@ def repair_cleaning_code(
     """Ask the LLM to fix a failed data-cleaning script given the error and original profile."""
 
     prompt = f"""
-You are repairing Python preprocessing code generated
-by an autonomous data science agent.
+You are repairing DATA CLEANING Python code generated by
+an autonomous data science agent.
 
-The previous code failed.
+The previous cleaning script failed during execution.
+
+Your job is ONLY to fix the actual execution failure while
+preserving the original cleaning objective.
+
+Do NOT expand the scope of the cleaning operation.
 
 TARGET COLUMN:
 {target_column}
@@ -272,31 +407,68 @@ DATASET PROFILE:
 FAILED CODE:
 {previous_code}
 
-ACTUAL ERROR:
+ACTUAL EXECUTION ERROR:
 {error_message}
 
-Generate corrected Python code.
+=========================================================
+STRICT CLEANING / ML BOUNDARY
+=========================================================
 
-TARGET RULES:
+The repaired script must perform DATA CLEANING ONLY.
+
+DO NOT:
+
+- One-hot encode columns.
+- Label encode columns.
+- Create dummy variables.
+- Scale or normalize features.
+- Standardize features.
+- Perform feature selection.
+- Perform dimensionality reduction.
+- Create model-specific features.
+- Split data into train/test sets.
+- Train ML models.
+- Drop identifiers merely because they are unsuitable
+  model features.
+- Drop PII merely because it should not be used for ML.
+- Transform the dataset into a model-ready feature matrix.
+- Automatically expand dates into year/month/day features.
+
+cleaned.csv must remain human-readable and structurally
+close to input.csv.
+
+=========================================================
+TARGET RULES
+=========================================================
+
 - The target column is "{target_column}".
 - Never impute missing target values.
 - Never generate synthetic target values.
 - Never derive features from the target.
-- Never drop the target column.
+- Never drop the target column itself.
 - If the target contains missing values, drop only rows
   where the target value is missing.
-- Do not use target-derived information for feature
-  preprocessing.
+- Do not use target-derived information to clean features.
+- Keep the target human-readable.
 
-GENERAL RULES:
-- Fix the actual cause of the failure.
+=========================================================
+REPAIR RULES
+=========================================================
+
+- Fix the ACTUAL cause of the supplied error.
+- Make the smallest reasonable correction.
+- Do not introduce unrelated transformations.
 - Do not invent columns.
+- Do not invent dataset statistics.
 - Read only "input.csv".
 - Save the result as "cleaned.csv".
 - Use pandas.
-- Do not train models.
+- Preserve original columns whenever possible.
+- Date columns may be parsed consistently but should not
+  automatically be expanded into ML features.
 - Do not access the network.
 - Do not use subprocesses.
-- Return a complete standalone script.
+- Return a complete standalone Python script.
+- Print a short cleaning summary after execution.
 """
     return repair_model.invoke(prompt)

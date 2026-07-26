@@ -1,0 +1,300 @@
+Employee_ID,First_Name,Last_Name,Age,Department_Region,Status,Join_Date,Salary,Email,Phone,Performance_Score,Remote_Work
+EMP1000,Bob,Davis,25,DevOps-California,Active,4/2/2021,59767.65,bob.davis@example.com,-1651623197,Average,TRUE
+EMP1001,Bob,Brown,,Finance-Texas,Active,7/10/2020,65304.66,bob.brown@example.com,-1898471390,Excellent,TRUE
+EMP1002,Alice,Jones,,Admin-Nevada,Pending,12/7/2023,88145.9,alice.jones@example.com,-5596363211,Good,TRUE
+EMP1003,Eva,Davis,25,Admin-Nevada,Inactive,11/27/2021,69450.99,eva.davis@example.com,-3476490784,Good,TRUE
+EMP1004,Frank,Williams,25,Cloud Tech-Florida,Active,1/5/2022,109324.61,frank.williams@example.com,-1586734256,Poor,FALSE
+EMP1005,Alice,Garcia,40,Sales-Texas,Inactive,6/10/2020,88642.84,alice.garcia@example.com,-5409003485,Good,FALSE
+EMP1006,Frank,Jones,,Admin-Nevada,Active,4/3/2020,96288.43,frank.jones@example.com,-4518376063,Good,FALSE
+EMP1007,Bob,Jones,30,Cloud Tech-Florida,Inactive,7/17/2022,94497.91,bob.jones@example.com,-4134327559,Average,TRUE
+EMP1008,Frank,Davis,35,Admin-Nevada,Inactive,12/8/2023,115565.82,frank.davis@example.com,-4177656123,Excellent,TRUE
+EMP1009,Charlie,Johnson,,DevOps-New York,Active,8/4/2022,76561.88,charlie.johnson@example.com,-8156985699,Excellent,TRUE
+EMP1010,David,Williams,35,Cloud Tech-New York,Active,7/6/2024,72081.71,david.williams@example.com,-2720634590,Average,FALSE
+EMP1011,David,Davis,,DevOps-California,Active,9/4/2023,84946.19,david.davis@example.com,-1238296576,Poor,TRUE
+EMP1012,Heidi,Williams,30,HR-New York,Active,3/5/2024,89295.77,heidi.williams@example.com,-2429543164,Excellent,FALSE
+EMP1013,Grace,Williams,,Finance-California,Active,10/10/2020,85666.84,grace.williams@example.com,-2669300892,Good,FALSE
+EMP1014,Alice,Garcia,25,Admin-Nevada,Active,6/10/2024,97633.68,alice.garcia@example.com,-1734206968,Excellent,TRUE
+EMP1015,Grace,Jones,40,Sales-Florida,Pending,5/29/2021,117975.49,grace.jones@example.com,-4215291085,Good,TRUE
+EMP1016,Alice,Brown,25,DevOps-Illinois,Inactive,4/23/2024,94867.33,alice.brown@example.com,-7713334475,Poor,FALSE
+EMP1017,Grace,Garcia,30,Finance-Texas,Pending,11/28/2024,100377.65,grace.garcia@example.com,-2639343625,Average,TRUE
+EMP1018,Charlie,Garcia,,Cloud Tech-Nevada,Inactive,9/19/2024,94726.46,charlie.garcia@example.com,-2044397358,Excellent,FALSE
+EMP1019,Charlie,Williams,35,Admin-Illinois,Pending,1/2/2020,91926.12,charlie.williams@example.com,-7107256365,Average,TRUE
+EMP1020,Bob,Miller,35,HR-New York,Active,5/8/2021,111460.67,bob.miller@example.com,-9411800536,Excellent,TRUE
+EMP1021,Bob,Jones,40,Cloud Tech-Illinois,Active,9/19/2020,96182.56,bob.jones@example.com,-5990048963,Good,FALSE
+EMP1022,Charlie,Johnson,35,Sales-Illinois,Inactive,3/9/2021,115023.94,charlie.johnson@example.com,-6528092427,Average,TRUE
+EMP1023,David,Garcia,35,Finance-Nevada,Pending,2/3/2022,80667.01,david.garcia@example.com,-7572158623,Excellent,FALSE
+EMP1024,Bob,Brown,30,Admin-Texas,Inactive,2/13/2020,91181.61,bob.brown@example.com,-1502745643,Good,TRUE
+EMP1025,David,Miller,25,Cloud Tech-Nevada,Pending,4/30/2020,66025.92,david.miller@example.com,-9485625727,Average,FALSE
+EMP1026,Frank,Miller,25,Sales-New York,Inactive,10/2/2023,83979.01,frank.miller@example.com,-7032032073,Average,FALSE
+EMP1027,Heidi,Johnson,30,Finance-Florida,Active,7/12/2020,56785.16,heidi.johnson@example.com,-2761707586,Excellent,TRUE
+EMP1028,Grace,Garcia,40,Finance-Nevada,Active,10/11/2023,95741.88,grace.garcia@example.com,-7712151341,Excellent,FALSE
+EMP1029,Alice,Brown,40,DevOps-California,Active,5/24/2021,63411.31,alice.brown@example.com,-2849939088,Excellent,TRUE
+EMP1030,Charlie,Jones,40,Admin-California,Inactive,5/26/2021,111214.02,charlie.jones@example.com,-2613715040,Good,TRUE
+EMP1031,Bob,Smith,25,DevOps-Illinois,Active,7/10/2020,114845.69,bob.smith@example.com,-6591520176,Excellent,TRUE
+EMP1032,Charlie,Brown,40,Finance-Florida,Active,11/5/2024,78072.82,charlie.brown@example.com,-7490509758,Average,FALSE
+EMP1033,Grace,Johnson,25,Finance-California,Inactive,8/7/2021,79610.52,grace.johnson@example.com,-2304501895,Average,FALSE
+EMP1034,Heidi,Miller,30,Admin-California,Active,4/29/2020,90542.62,heidi.miller@example.com,-1642361031,Excellent,TRUE
+EMP1035,Frank,Jones,25,Cloud Tech-Illinois,Inactive,10/26/2022,114357.1,frank.jones@example.com,-6642147648,Excellent,TRUE
+EMP1036,Alice,Brown,,Cloud Tech-New York,Active,5/3/2023,54757.26,alice.brown@example.com,-2515837766,Poor,FALSE
+EMP1037,Grace,Smith,25,Sales-New York,Pending,5/2/2023,52781.92,grace.smith@example.com,-4996165925,Average,TRUE
+EMP1038,Frank,Smith,35,Admin-Nevada,Pending,10/5/2021,66708.02,frank.smith@example.com,-6108573277,Good,TRUE
+EMP1039,Eva,Williams,40,HR-Texas,Active,7/27/2022,93481.15,eva.williams@example.com,-8147617421,Poor,FALSE
+EMP1040,Bob,Williams,25,Sales-New York,Pending,6/27/2021,59271.96,bob.williams@example.com,-4386490809,Excellent,TRUE
+EMP1041,Bob,Davis,30,HR-California,Active,6/16/2022,108362.15,bob.davis@example.com,-8186617944,Excellent,FALSE
+EMP1042,Alice,Johnson,,HR-Nevada,Active,12/3/2024,59400.38,alice.johnson@example.com,-4918017225,Average,TRUE
+EMP1043,Bob,Garcia,,Admin-California,Inactive,5/23/2023,64744.08,bob.garcia@example.com,-164597793,Excellent,FALSE
+EMP1044,Eva,Brown,,Finance-California,Active,7/8/2020,94399.91,eva.brown@example.com,-5232194167,Good,TRUE
+EMP1045,Alice,Brown,25,HR-New York,Pending,6/20/2021,61310.74,alice.brown@example.com,-61027768,Average,TRUE
+EMP1046,Grace,Garcia,,Cloud Tech-Texas,Active,12/13/2024,98371.37,grace.garcia@example.com,-7499564121,Excellent,FALSE
+EMP1047,Alice,Davis,35,Sales-Illinois,Active,5/30/2022,58921.19,alice.davis@example.com,-310303722,Average,TRUE
+EMP1048,Alice,Miller,35,Admin-Nevada,Active,9/27/2023,57195.55,alice.miller@example.com,-6831472759,Excellent,FALSE
+EMP1049,Grace,Miller,,DevOps-New York,Active,11/5/2024,61375.12,grace.miller@example.com,-1227770792,Excellent,TRUE
+EMP1050,Charlie,Davis,40,Cloud Tech-New York,Pending,11/11/2021,104767.05,charlie.davis@example.com,-3496050165,Excellent,FALSE
+EMP1051,David,Miller,35,Admin-Nevada,Active,2/22/2022,111051.67,david.miller@example.com,-7998407677,Good,FALSE
+EMP1052,David,Williams,30,Finance-California,Inactive,8/7/2024,105674.18,david.williams@example.com,-9973080694,Good,FALSE
+EMP1053,Alice,Brown,30,Finance-California,Inactive,11/5/2024,54859.45,alice.brown@example.com,-8146717956,Average,FALSE
+EMP1054,Frank,Davis,,Finance-Nevada,Pending,11/9/2021,115746.6,frank.davis@example.com,-6024375737,Excellent,TRUE
+EMP1055,Eva,Brown,30,Sales-California,Active,8/10/2020,91759.99,eva.brown@example.com,-3959724664,Excellent,TRUE
+EMP1056,Frank,Garcia,40,Sales-Illinois,Active,2/27/2022,112965.33,frank.garcia@example.com,-7293417222,Good,FALSE
+EMP1057,Alice,Smith,40,Cloud Tech-Illinois,Pending,11/7/2023,100360.1,alice.smith@example.com,-2971674337,Excellent,FALSE
+EMP1058,David,Williams,35,Finance-Texas,Pending,11/7/2021,93620.88,david.williams@example.com,-54522800,Good,FALSE
+EMP1059,Bob,Jones,35,Sales-California,Pending,4/16/2022,72832.8,bob.jones@example.com,-5619318373,Excellent,TRUE
+EMP1060,Charlie,Williams,30,Finance-Nevada,Inactive,10/19/2023,102369.42,charlie.williams@example.com,-5508428909,Average,TRUE
+EMP1061,Eva,Davis,40,Sales-Texas,Inactive,8/10/2021,64712.79,eva.davis@example.com,-7711991807,Excellent,TRUE
+EMP1062,Frank,Jones,40,Finance-Florida,Pending,3/13/2021,85782.18,frank.jones@example.com,-1213524786,Excellent,TRUE
+EMP1063,Charlie,Smith,25,HR-Illinois,Pending,7/20/2023,93348.26,charlie.smith@example.com,-1255213759,Poor,FALSE
+EMP1064,David,Davis,35,Admin-New York,Active,2/20/2020,53234.96,david.davis@example.com,-3754821455,Good,FALSE
+EMP1065,Bob,Johnson,40,Finance-Nevada,Pending,2/2/2021,100284.21,bob.johnson@example.com,-5328632665,Excellent,FALSE
+EMP1066,Grace,Brown,30,Admin-Nevada,Pending,1/12/2020,112486.19,grace.brown@example.com,-7850720810,Excellent,TRUE
+EMP1067,Bob,Smith,40,Admin-New York,Pending,11/26/2022,82518.49,bob.smith@example.com,-5562606028,Poor,TRUE
+EMP1068,Bob,Brown,40,Admin-Florida,Pending,12/23/2022,119152.47,bob.brown@example.com,-846684549,Poor,TRUE
+EMP1069,Heidi,Miller,,DevOps-Illinois,Inactive,8/28/2024,113479.83,heidi.miller@example.com,-4892673898,Good,FALSE
+EMP1070,Charlie,Johnson,40,Finance-California,Active,9/16/2024,94636.3,charlie.johnson@example.com,-7563410855,Poor,FALSE
+EMP1071,Heidi,Johnson,30,HR-Florida,Active,1/1/2024,70000.97,heidi.johnson@example.com,-2884318847,Average,TRUE
+EMP1072,Frank,Smith,,Cloud Tech-New York,Active,4/18/2021,76812.47,frank.smith@example.com,-5200894345,Poor,FALSE
+EMP1073,David,Johnson,25,Finance-Florida,Inactive,1/16/2023,82614.7,david.johnson@example.com,-8105485100,Average,TRUE
+EMP1074,Grace,Jones,40,Sales-Nevada,Active,10/20/2024,111645.97,grace.jones@example.com,-7490753997,Good,TRUE
+EMP1075,Heidi,Johnson,25,HR-California,Inactive,10/13/2024,112414.91,heidi.johnson@example.com,-9354492682,Good,FALSE
+EMP1076,David,Brown,40,Admin-California,Inactive,9/21/2022,52031.74,david.brown@example.com,-1589357125,Good,TRUE
+EMP1077,Grace,Brown,30,Finance-New York,Pending,12/29/2022,51887.65,grace.brown@example.com,-6110627370,Good,FALSE
+EMP1078,Alice,Davis,25,DevOps-Florida,Active,11/10/2024,82318.89,alice.davis@example.com,-5869886496,Good,TRUE
+EMP1079,Grace,Brown,35,Admin-Florida,Inactive,11/22/2021,103286.08,grace.brown@example.com,-6776228276,Average,FALSE
+EMP1080,Grace,Davis,35,Cloud Tech-Florida,Active,3/14/2024,87759.33,grace.davis@example.com,-2881377027,Average,FALSE
+EMP1081,Frank,Brown,30,DevOps-Texas,Pending,3/23/2020,102796.32,frank.brown@example.com,-5196115939,Good,FALSE
+EMP1082,David,Jones,25,Sales-New York,Active,9/15/2020,83149.27,david.jones@example.com,-8215454469,Poor,TRUE
+EMP1083,David,Garcia,40,DevOps-California,Inactive,12/9/2020,92412.49,david.garcia@example.com,-2296044326,Excellent,TRUE
+EMP1084,Bob,Davis,30,HR-Texas,Pending,2/22/2020,115022.1,bob.davis@example.com,-185106793,Good,FALSE
+EMP1085,Grace,Williams,40,DevOps-New York,Active,4/27/2023,98343.01,grace.williams@example.com,-9756792286,Poor,FALSE
+EMP1086,Bob,Miller,35,DevOps-Illinois,Active,6/18/2024,118869.1,bob.miller@example.com,-7725199662,Excellent,TRUE
+EMP1087,Frank,Smith,,Finance-Nevada,Inactive,5/21/2020,85417.26,frank.smith@example.com,-6580741208,Good,TRUE
+EMP1088,Grace,Brown,40,Cloud Tech-Florida,Inactive,7/25/2023,112410.25,grace.brown@example.com,-4818139889,Good,TRUE
+EMP1089,Charlie,Johnson,40,Admin-Nevada,Pending,8/25/2023,68905.77,charlie.johnson@example.com,-9837801819,Average,FALSE
+EMP1090,Heidi,Garcia,40,Finance-Nevada,Pending,7/3/2021,72561.32,heidi.garcia@example.com,-4339718955,Excellent,TRUE
+EMP1091,Bob,Brown,35,Finance-New York,Inactive,3/13/2023,92723.22,bob.brown@example.com,-9070562607,Excellent,TRUE
+EMP1092,Alice,Johnson,40,HR-New York,Inactive,3/10/2021,74837.75,alice.johnson@example.com,-5641118241,Poor,FALSE
+EMP1093,Eva,Miller,,DevOps-California,Pending,1/21/2020,86163.91,eva.miller@example.com,-2412462094,Average,TRUE
+EMP1094,David,Miller,40,Finance-Illinois,Active,11/15/2023,83326.52,david.miller@example.com,-2004615264,Average,TRUE
+EMP1095,Heidi,Miller,25,Cloud Tech-California,Active,4/8/2022,98425.1,heidi.miller@example.com,-4610339936,Average,TRUE
+EMP1096,Frank,Johnson,40,Sales-Illinois,Inactive,5/21/2022,119764.2,frank.johnson@example.com,-8861405785,Average,FALSE
+EMP1097,Frank,Brown,40,HR-California,Inactive,4/17/2021,58445.91,frank.brown@example.com,-1706304890,Excellent,FALSE
+EMP1098,Bob,Miller,,DevOps-New York,Active,3/19/2021,101702.33,bob.miller@example.com,-3824967182,Excellent,FALSE
+EMP1099,Eva,Jones,25,Admin-California,Active,1/9/2022,N/A,eva.jones@example.com,-2582386869,Good,FALSE
+EMP1100,Charlie,Davis,35,Cloud Tech-Texas,Pending,8/21/2021,98819.22,charlie.davis@example.com,-794200748,Good,FALSE
+EMP1101,Heidi,Johnson,25,Cloud Tech-Illinois,Inactive,8/19/2022,83509.99,heidi.johnson@example.com,-4653984027,Average,FALSE
+EMP1102,Alice,Johnson,35,Finance-Texas,Active,3/31/2022,84422.26,alice.johnson@example.com,-9141612845,Average,FALSE
+EMP1103,Alice,Brown,30,Admin-Illinois,Inactive,6/23/2020,119574.27,alice.brown@example.com,-3985547434,Average,TRUE
+EMP1104,Grace,Johnson,,Sales-Illinois,Active,5/7/2024,86580.08,grace.johnson@example.com,-5379502096,Good,TRUE
+EMP1105,Heidi,Johnson,35,Sales-Florida,Inactive,3/10/2023,93471.91,heidi.johnson@example.com,-26876810,Poor,FALSE
+EMP1106,Bob,Miller,30,DevOps-New York,Inactive,9/14/2023,55683.12,bob.miller@example.com,-8071569561,Poor,TRUE
+EMP1107,Bob,Brown,30,Cloud Tech-Florida,Inactive,11/12/2023,91566.78,bob.brown@example.com,-175370303,Good,TRUE
+EMP1108,David,Miller,35,DevOps-California,Pending,10/26/2024,81782.19,david.miller@example.com,-5319433749,Good,FALSE
+EMP1109,Eva,Davis,,DevOps-New York,Inactive,8/23/2020,88119.37,eva.davis@example.com,-4793036148,Good,TRUE
+EMP1110,Eva,Garcia,30,Cloud Tech-Texas,Active,6/11/2024,71532.83,eva.garcia@example.com,-8728399920,Good,TRUE
+EMP1111,Eva,Davis,40,Cloud Tech-Florida,Pending,9/14/2021,98981.36,eva.davis@example.com,-9212493842,Good,TRUE
+EMP1112,Heidi,Garcia,40,Cloud Tech-Illinois,Active,12/26/2024,80242.01,heidi.garcia@example.com,-894870604,Good,TRUE
+EMP1113,Eva,Miller,25,Cloud Tech-New York,Pending,9/8/2024,110236.18,eva.miller@example.com,-6641877579,Average,TRUE
+EMP1114,Alice,Davis,35,Sales-Texas,Active,8/21/2022,86327.47,alice.davis@example.com,-3046875062,Average,FALSE
+EMP1115,Eva,Brown,30,Sales-Florida,Pending,7/25/2024,84420.81,eva.brown@example.com,-5190361331,Average,FALSE
+EMP1116,Frank,Smith,40,HR-California,Pending,8/2/2020,110041.32,frank.smith@example.com,-5411076094,Average,FALSE
+EMP1117,Heidi,Miller,35,DevOps-Florida,Pending,3/16/2020,81837.81,heidi.miller@example.com,-4317350582,Good,TRUE
+EMP1118,Frank,Garcia,25,Finance-Illinois,Active,9/8/2023,110855.72,frank.garcia@example.com,-1997179109,Poor,FALSE
+EMP1119,Alice,Jones,30,Sales-California,Pending,3/29/2024,84894.52,alice.jones@example.com,-651207048,Excellent,TRUE
+EMP1120,Alice,Garcia,30,HR-Illinois,Active,8/12/2021,80668.13,alice.garcia@example.com,-6110804660,Good,TRUE
+EMP1121,Bob,Jones,25,DevOps-Illinois,Active,12/24/2023,61086.47,bob.jones@example.com,-9639907675,Excellent,TRUE
+EMP1122,Grace,Johnson,25,Admin-Texas,Inactive,8/28/2020,95339.68,grace.johnson@example.com,-9915078592,Poor,TRUE
+EMP1123,Eva,Davis,,DevOps-California,Inactive,9/5/2024,83774.97,eva.davis@example.com,-1109193927,Average,FALSE
+EMP1124,Heidi,Jones,,Admin-Florida,Active,5/12/2023,85576.86,heidi.jones@example.com,-4567972319,Poor,FALSE
+EMP1125,Bob,Garcia,35,Finance-California,Pending,7/1/2021,107438.46,bob.garcia@example.com,-249685497,Good,TRUE
+EMP1126,Eva,Johnson,,Sales-Nevada,Inactive,11/7/2024,60401.68,eva.johnson@example.com,-2274954507,Average,FALSE
+EMP1127,Frank,Smith,35,Sales-Illinois,Inactive,7/21/2022,115299.66,frank.smith@example.com,-9203880652,Good,TRUE
+EMP1128,David,Brown,,Finance-New York,Inactive,3/30/2020,72272.34,david.brown@example.com,-3315377958,Average,FALSE
+EMP1129,Grace,Brown,40,DevOps-Nevada,Active,10/11/2022,117537.71,grace.brown@example.com,-9594652169,Excellent,FALSE
+EMP1130,Frank,Brown,25,Finance-Texas,Pending,7/24/2022,51074.33,frank.brown@example.com,-7303379336,Excellent,TRUE
+EMP1131,Charlie,Jones,25,Finance-California,Inactive,6/30/2023,98489.32,charlie.jones@example.com,-5636205014,Excellent,FALSE
+EMP1132,Frank,Smith,,Finance-California,Pending,1/11/2024,112120.71,frank.smith@example.com,-812473949,Poor,TRUE
+EMP1133,Alice,Jones,,Cloud Tech-New York,Pending,11/2/2023,114465.04,alice.jones@example.com,-334234257,Good,FALSE
+EMP1134,Bob,Davis,40,Cloud Tech-Nevada,Pending,11/22/2024,57035.51,bob.davis@example.com,-3230241025,Poor,TRUE
+EMP1135,Eva,Jones,25,Cloud Tech-California,Active,8/23/2021,75092.43,eva.jones@example.com,-1534735527,Excellent,TRUE
+EMP1136,David,Smith,,Finance-Illinois,Pending,6/11/2024,62603.98,david.smith@example.com,-9611223385,Good,FALSE
+EMP1137,Grace,Smith,,DevOps-New York,Inactive,4/9/2023,60018.24,grace.smith@example.com,-5596309937,Excellent,FALSE
+EMP1138,Eva,Davis,40,HR-Nevada,Active,7/5/2024,82567.73,eva.davis@example.com,-4253042896,Poor,TRUE
+EMP1139,Charlie,Smith,25,Finance-California,Pending,9/4/2021,94725.71,charlie.smith@example.com,-3179128684,Poor,FALSE
+EMP1140,Eva,Garcia,40,HR-New York,Inactive,10/13/2024,83824.56,eva.garcia@example.com,-7872558776,Poor,FALSE
+EMP1141,Frank,Smith,,HR-Nevada,Inactive,2/14/2020,118456.11,frank.smith@example.com,-4969033372,Excellent,TRUE
+EMP1142,Eva,Brown,25,Sales-Nevada,Pending,4/10/2020,113743.19,eva.brown@example.com,-6346692547,Good,TRUE
+EMP1143,Eva,Garcia,30,Sales-California,Active,7/27/2023,63309.24,eva.garcia@example.com,-1214785389,Good,FALSE
+EMP1144,Charlie,Garcia,25,DevOps-Nevada,Active,9/24/2021,105202.73,charlie.garcia@example.com,-7895677664,Excellent,TRUE
+EMP1145,Frank,Davis,30,Cloud Tech-California,Inactive,3/10/2024,79085.22,frank.davis@example.com,-7546027340,Good,TRUE
+EMP1146,Frank,Williams,,Sales-California,Active,6/10/2021,113983.43,frank.williams@example.com,-5148881430,Excellent,TRUE
+EMP1147,Eva,Williams,35,Cloud Tech-Florida,Active,10/15/2020,102790.6,eva.williams@example.com,-1150835353,Good,FALSE
+EMP1148,Grace,Smith,,HR-Texas,Inactive,1/29/2020,68512.1,grace.smith@example.com,-4439284043,Average,FALSE
+EMP1149,Frank,Garcia,35,Sales-Florida,Pending,1/30/2022,57584.23,frank.garcia@example.com,-5669078262,Average,TRUE
+EMP1150,Alice,Williams,,Sales-California,Pending,3/29/2021,95335.67,alice.williams@example.com,-3373898774,Poor,FALSE
+EMP1151,Heidi,Williams,35,DevOps-Florida,Active,10/13/2020,53174.28,heidi.williams@example.com,-1536637779,Average,TRUE
+EMP1152,Heidi,Smith,25,Cloud Tech-New York,Pending,10/4/2020,77205.21,heidi.smith@example.com,-5292407552,Average,FALSE
+EMP1153,Grace,Williams,,DevOps-Nevada,Active,12/18/2024,79041.92,grace.williams@example.com,-6668459089,Average,TRUE
+EMP1154,Heidi,Jones,,Finance-California,Active,11/14/2023,75937.1,heidi.jones@example.com,-2259999662,Excellent,TRUE
+EMP1155,David,Johnson,35,Cloud Tech-Nevada,Inactive,1/20/2023,113118.73,david.johnson@example.com,-6186371596,Average,FALSE
+EMP1156,Alice,Davis,40,HR-New York,Active,10/2/2024,107693.38,alice.davis@example.com,-4121820969,Average,TRUE
+EMP1157,David,Johnson,,Cloud Tech-Texas,Inactive,5/13/2021,119217.46,david.johnson@example.com,-2316433480,Poor,FALSE
+EMP1158,David,Smith,25,Sales-New York,Pending,3/18/2021,106913.71,david.smith@example.com,-7058025661,Average,FALSE
+EMP1159,Charlie,Brown,,Cloud Tech-California,Active,9/23/2020,87815.08,charlie.brown@example.com,-1286716322,Average,TRUE
+EMP1160,Bob,Davis,25,Admin-Texas,Inactive,6/5/2024,105190.21,bob.davis@example.com,-4672994937,Good,TRUE
+EMP1161,Alice,Smith,30,HR-Texas,Active,2/28/2024,79467.24,alice.smith@example.com,-7430271692,Poor,FALSE
+EMP1162,Bob,Garcia,40,Finance-California,Pending,4/30/2023,57633.78,bob.garcia@example.com,-8597779013,Poor,TRUE
+EMP1163,Alice,Brown,,HR-Florida,Pending,3/4/2020,54257.78,alice.brown@example.com,-7546926328,Poor,TRUE
+EMP1164,Grace,Johnson,40,DevOps-Texas,Inactive,12/29/2023,113679.06,grace.johnson@example.com,-6762916031,Poor,TRUE
+EMP1165,Bob,Smith,35,Sales-New York,Active,9/15/2020,69251.12,bob.smith@example.com,-4841376814,Poor,TRUE
+EMP1166,Frank,Garcia,40,Sales-Illinois,Inactive,7/18/2022,85388.58,frank.garcia@example.com,-1185672437,Poor,TRUE
+EMP1167,Bob,Davis,,DevOps-New York,Inactive,7/13/2022,112166.37,bob.davis@example.com,-701765635,Excellent,FALSE
+EMP1168,Heidi,Davis,40,Finance-Nevada,Active,10/2/2021,79873.48,heidi.davis@example.com,-41257770,Average,FALSE
+EMP1169,Frank,Miller,30,DevOps-Florida,Active,7/5/2020,108224.03,frank.miller@example.com,-1837274219,Poor,TRUE
+EMP1170,Bob,Garcia,35,Admin-Illinois,Active,4/16/2023,116963.72,bob.garcia@example.com,-9124186209,Average,TRUE
+EMP1171,Bob,Jones,40,HR-Nevada,Inactive,11/12/2024,114109.06,bob.jones@example.com,-4275230836,Average,TRUE
+EMP1172,Eva,Williams,,HR-California,Active,3/29/2023,85518.88,eva.williams@example.com,-816470899,Excellent,FALSE
+EMP1173,Heidi,Brown,30,Cloud Tech-California,Pending,1/22/2022,58041.97,heidi.brown@example.com,-6335331059,Poor,TRUE
+EMP1174,David,Garcia,40,Sales-Illinois,Pending,10/14/2023,94988.94,david.garcia@example.com,-531312205,Good,FALSE
+EMP1175,Eva,Miller,25,Admin-California,Pending,4/10/2024,71628.93,eva.miller@example.com,-8155839385,Excellent,FALSE
+EMP1176,Alice,Williams,30,Admin-Illinois,Pending,3/31/2022,54870.98,alice.williams@example.com,-6133155205,Good,FALSE
+EMP1177,Alice,Williams,25,DevOps-Illinois,Active,2/9/2022,79388.27,alice.williams@example.com,-5063731494,Average,TRUE
+EMP1178,Frank,Smith,35,DevOps-California,Pending,5/6/2023,55946.99,frank.smith@example.com,-136497188,Average,FALSE
+EMP1179,Charlie,Williams,,Cloud Tech-Nevada,Active,7/11/2021,81017.91,charlie.williams@example.com,-2419562524,Excellent,TRUE
+EMP1180,Heidi,Jones,40,HR-New York,Pending,8/21/2020,74162.1,heidi.jones@example.com,-7150997682,Excellent,FALSE
+EMP1181,Heidi,Davis,,DevOps-California,Active,3/27/2021,77668.44,heidi.davis@example.com,-8903091435,Good,TRUE
+EMP1182,Alice,Miller,30,HR-New York,Active,4/14/2024,67886.37,alice.miller@example.com,-3910257431,Poor,FALSE
+EMP1183,Alice,Williams,40,DevOps-Florida,Active,9/21/2020,76614.52,alice.williams@example.com,-6303975244,Good,TRUE
+EMP1184,Frank,Smith,25,Finance-Nevada,Active,6/12/2022,51311.91,frank.smith@example.com,-864035532,Excellent,FALSE
+EMP1185,Frank,Jones,,Finance-Illinois,Inactive,12/24/2023,94809.92,frank.jones@example.com,-8033968526,Good,TRUE
+EMP1186,Grace,Johnson,25,HR-New York,Pending,7/31/2022,108241.81,grace.johnson@example.com,-171302320,Excellent,TRUE
+EMP1187,Bob,Davis,40,Cloud Tech-New York,Inactive,4/21/2023,78031.49,bob.davis@example.com,-2983381673,Good,TRUE
+EMP1188,Eva,Davis,35,Admin-California,Active,6/5/2020,85733.83,eva.davis@example.com,-2336293448,Excellent,TRUE
+EMP1189,David,Miller,35,HR-Nevada,Pending,7/27/2024,60338.29,david.miller@example.com,-7347156626,Excellent,FALSE
+EMP1190,Eva,Davis,30,Admin-Illinois,Active,4/5/2024,103140.67,eva.davis@example.com,-7689627065,Excellent,FALSE
+EMP1191,Heidi,Williams,40,Sales-Illinois,Inactive,10/26/2023,114690.8,heidi.williams@example.com,-1498282466,Poor,TRUE
+EMP1192,Frank,Smith,35,Admin-Florida,Active,8/18/2022,80954.56,frank.smith@example.com,-4746897151,Good,FALSE
+EMP1193,Eva,Davis,,Cloud Tech-California,Pending,5/31/2020,71728.55,eva.davis@example.com,-7323008575,Good,TRUE
+EMP1194,Alice,Davis,35,HR-Texas,Pending,11/4/2024,118415.8,alice.davis@example.com,-6656749159,Good,TRUE
+EMP1195,Grace,Johnson,40,Sales-Illinois,Pending,3/25/2020,81481.36,grace.johnson@example.com,-1692364586,Excellent,FALSE
+EMP1196,David,Johnson,35,Sales-Florida,Pending,11/4/2020,117040.57,david.johnson@example.com,-5066337049,Good,TRUE
+EMP1197,Frank,Brown,25,Sales-Nevada,Active,3/21/2020,67342.06,frank.brown@example.com,-2497243991,Good,TRUE
+EMP1198,Heidi,Jones,,Sales-Illinois,Active,1/15/2022,76099.64,heidi.jones@example.com,-116691835,Excellent,FALSE
+EMP1199,Grace,Williams,35,DevOps-Illinois,Active,6/4/2024,94162.06,grace.williams@example.com,-2644886945,Average,TRUE
+EMP1200,Frank,Davis,25,Sales-Nevada,Inactive,8/4/2021,67639.7,frank.davis@example.com,-1195243639,Excellent,TRUE
+EMP1201,Charlie,Garcia,35,Cloud Tech-Illinois,Pending,10/16/2020,114172.25,charlie.garcia@example.com,-2701168645,Good,TRUE
+EMP1202,Grace,Davis,30,Sales-Nevada,Active,9/26/2021,89124.54,grace.davis@example.com,-2252237280,Excellent,TRUE
+EMP1203,Frank,Smith,30,DevOps-Nevada,Pending,11/4/2023,113871.36,frank.smith@example.com,-7932302345,Average,FALSE
+EMP1204,Grace,Brown,,HR-Texas,Inactive,9/24/2021,62618.4,grace.brown@example.com,-7912141613,Excellent,FALSE
+EMP1205,Heidi,Jones,30,Admin-New York,Active,6/7/2020,70705.45,heidi.jones@example.com,-1509377099,Good,FALSE
+EMP1206,Alice,Garcia,35,Sales-New York,Pending,2/10/2022,60797.69,alice.garcia@example.com,-4090138068,Average,TRUE
+EMP1207,Charlie,Brown,40,Cloud Tech-Florida,Inactive,10/17/2023,100371,charlie.brown@example.com,-8477596554,Poor,TRUE
+EMP1208,Eva,Miller,40,Admin-Illinois,Active,9/25/2021,117591.76,eva.miller@example.com,-5356690550,Good,FALSE
+EMP1209,David,Jones,35,DevOps-Illinois,Inactive,8/3/2022,103860.7,david.jones@example.com,-762091842,Average,TRUE
+EMP1210,Grace,Davis,30,Admin-Illinois,Active,11/22/2024,67500.22,grace.davis@example.com,-5797863049,Average,TRUE
+EMP1211,Frank,Davis,,Cloud Tech-Nevada,Pending,10/9/2024,58727.44,frank.davis@example.com,-5057397690,Poor,TRUE
+EMP1212,Charlie,Jones,35,Finance-Illinois,Active,8/28/2024,80623.08,charlie.jones@example.com,-5671649327,Excellent,TRUE
+EMP1213,David,Davis,40,HR-Texas,Inactive,4/19/2020,77751.78,david.davis@example.com,-9802714871,Excellent,FALSE
+EMP1214,Grace,Williams,25,HR-New York,Active,10/14/2021,115157.81,grace.williams@example.com,-7178333210,Good,FALSE
+EMP1215,Frank,Jones,30,Admin-Texas,Inactive,8/26/2024,83071.85,frank.jones@example.com,-6025643470,Poor,FALSE
+EMP1216,Heidi,Brown,40,Sales-Texas,Active,2/8/2020,67914.67,heidi.brown@example.com,-2871539914,Excellent,TRUE
+EMP1217,Grace,Jones,25,HR-New York,Inactive,9/6/2020,53342.46,grace.jones@example.com,-6686334140,Poor,FALSE
+EMP1218,Heidi,Garcia,25,Cloud Tech-Florida,Pending,1/2/2023,51150.47,heidi.garcia@example.com,-1159319524,Excellent,FALSE
+EMP1219,David,Davis,30,HR-Florida,Active,6/13/2023,74697.12,david.davis@example.com,-6904098365,Average,TRUE
+EMP1220,Charlie,Williams,25,Sales-California,Active,12/13/2022,88085.74,charlie.williams@example.com,-5528993159,Excellent,TRUE
+EMP1221,Alice,Williams,40,Finance-Texas,Pending,3/3/2022,118672.76,alice.williams@example.com,-8752437728,Poor,FALSE
+EMP1222,Alice,Miller,35,Cloud Tech-California,Active,2/10/2024,95997.31,alice.miller@example.com,-4209548148,Average,FALSE
+EMP1223,Frank,Brown,30,Cloud Tech-California,Pending,11/24/2021,106945.62,frank.brown@example.com,-7374605232,Average,FALSE
+EMP1224,Heidi,Johnson,40,DevOps-New York,Active,5/9/2020,100123.15,heidi.johnson@example.com,-276420864,Average,FALSE
+EMP1225,Alice,Johnson,35,Admin-Texas,Active,12/19/2024,52933.42,alice.johnson@example.com,-6756618442,Poor,TRUE
+EMP1226,Grace,Jones,,Finance-California,Active,3/22/2024,95283.03,grace.jones@example.com,-8612590471,Good,FALSE
+EMP1227,Alice,Miller,35,HR-Texas,Inactive,6/13/2022,112264.06,alice.miller@example.com,-9277423329,Good,FALSE
+EMP1228,Grace,Smith,35,Admin-Florida,Pending,10/15/2022,75714.28,grace.smith@example.com,-5912662014,Good,TRUE
+EMP1229,Eva,Jones,25,DevOps-Florida,Active,5/31/2022,92171.73,eva.jones@example.com,-7201859625,Poor,FALSE
+EMP1230,Eva,Miller,35,Cloud Tech-Texas,Inactive,9/15/2023,70694.8,eva.miller@example.com,-3013674925,Average,TRUE
+EMP1231,Grace,Brown,30,DevOps-Florida,Inactive,7/4/2022,52964.86,grace.brown@example.com,-1764750110,Good,TRUE
+EMP1232,Frank,Brown,,Finance-California,Pending,6/8/2024,116353.31,frank.brown@example.com,-1783099973,Poor,TRUE
+EMP1233,Grace,Brown,35,Sales-Nevada,Pending,11/23/2020,116695.26,grace.brown@example.com,-1926764920,Good,FALSE
+EMP1234,Heidi,Brown,25,Admin-Texas,Active,5/13/2024,95161.4,heidi.brown@example.com,-5182606887,Excellent,FALSE
+EMP1235,Alice,Brown,,Admin-Nevada,Inactive,1/29/2022,76040.94,alice.brown@example.com,-7189813128,Good,TRUE
+EMP1236,Charlie,Miller,,HR-Florida,Inactive,8/23/2023,69508.28,charlie.miller@example.com,-2087510292,Good,FALSE
+EMP1237,Alice,Miller,30,Finance-Illinois,Inactive,2/24/2023,58243.27,alice.miller@example.com,-2184011844,Average,FALSE
+EMP1238,Heidi,Williams,30,Sales-California,Pending,10/2/2022,64012.48,heidi.williams@example.com,-8260340847,Poor,TRUE
+EMP1239,Bob,Garcia,40,Admin-Nevada,Inactive,6/28/2020,106735.93,bob.garcia@example.com,-7297585987,Average,TRUE
+EMP1240,Frank,Johnson,35,DevOps-Texas,Pending,1/15/2023,70325.36,frank.johnson@example.com,-3103032431,Average,FALSE
+EMP1241,Charlie,Davis,30,HR-Illinois,Active,9/5/2020,118959.28,charlie.davis@example.com,-9839542960,Average,TRUE
+EMP1242,David,Brown,40,Cloud Tech-California,Pending,3/18/2023,75823.78,david.brown@example.com,-8446267145,Average,FALSE
+EMP1243,Charlie,Smith,,Cloud Tech-Texas,Inactive,3/26/2022,119971.65,charlie.smith@example.com,-2831435988,Average,FALSE
+EMP1244,Grace,Davis,40,Sales-Texas,Active,10/11/2021,94963.7,grace.davis@example.com,-2625660930,Good,FALSE
+EMP1245,Frank,Miller,30,Sales-Nevada,Pending,1/7/2021,103744.71,frank.miller@example.com,-4181861514,Average,FALSE
+EMP1246,Alice,Smith,25,Sales-New York,Inactive,12/3/2020,61337.69,alice.smith@example.com,-5423401635,Average,TRUE
+EMP1247,David,Smith,35,Sales-California,Active,5/28/2021,63741.13,david.smith@example.com,-1128497184,Poor,TRUE
+EMP1248,Eva,Smith,30,DevOps-California,Pending,12/28/2022,56539.99,eva.smith@example.com,-9484910255,Excellent,TRUE
+EMP1249,Charlie,Williams,30,DevOps-Illinois,Pending,5/24/2023,73633.37,charlie.williams@example.com,-2588967923,Good,TRUE
+EMP1250,Alice,Miller,25,Cloud Tech-Texas,Pending,4/28/2024,90373.99,alice.miller@example.com,-822269404,Good,FALSE
+EMP1251,Grace,Smith,,DevOps-Texas,Inactive,12/25/2024,93901.48,grace.smith@example.com,-3967275783,Good,FALSE
+EMP1252,Eva,Brown,40,Admin-Nevada,Inactive,9/1/2021,81748.09,eva.brown@example.com,-4683414650,Average,TRUE
+EMP1253,Charlie,Jones,40,Finance-Florida,Inactive,2/21/2021,73813.48,charlie.jones@example.com,-1131290147,Average,FALSE
+EMP1254,Frank,Smith,35,Finance-New York,Inactive,11/20/2022,89315.59,frank.smith@example.com,-7068277880,Average,FALSE
+EMP1255,Heidi,Williams,25,HR-Florida,Active,10/15/2020,56776.82,heidi.williams@example.com,-6093068537,Poor,FALSE
+EMP1256,Grace,Davis,,Finance-New York,Active,7/24/2024,72920.51,grace.davis@example.com,-9097283214,Excellent,TRUE
+EMP1257,Frank,Miller,30,Admin-Florida,Pending,8/14/2022,84913.18,frank.miller@example.com,-2850676250,Average,TRUE
+EMP1258,Alice,Garcia,25,Finance-Illinois,Inactive,5/8/2021,65060.11,alice.garcia@example.com,-5381447442,Excellent,TRUE
+EMP1259,Alice,Williams,35,Finance-Illinois,Pending,10/9/2023,82941.08,alice.williams@example.com,-963480796,Poor,FALSE
+EMP1260,Bob,Smith,40,Admin-California,Pending,1/19/2022,103469.97,bob.smith@example.com,-509754509,Good,TRUE
+EMP1261,Grace,Miller,25,Sales-Illinois,Active,1/12/2022,88725.6,grace.miller@example.com,-5265016730,Average,TRUE
+EMP1262,Heidi,Jones,,HR-Illinois,Pending,6/5/2023,58316.77,heidi.jones@example.com,-8826170242,Excellent,TRUE
+EMP1263,Grace,Smith,35,HR-Illinois,Inactive,3/26/2024,60098.72,grace.smith@example.com,-7654562840,Excellent,TRUE
+EMP1264,Grace,Williams,,Cloud Tech-Texas,Active,10/7/2020,99951.43,grace.williams@example.com,-7722560530,Average,TRUE
+EMP1265,Heidi,Johnson,30,Sales-Illinois,Active,11/2/2021,115195.81,heidi.johnson@example.com,-3402665022,Good,TRUE
+EMP1266,Grace,Brown,,DevOps-California,Pending,11/19/2021,85512.05,grace.brown@example.com,-7416787255,Good,FALSE
+EMP1267,Heidi,Garcia,,HR-Florida,Active,1/24/2022,73186.77,heidi.garcia@example.com,-8621102257,Good,FALSE
+EMP1268,Grace,Davis,,HR-Nevada,Pending,7/12/2023,51865.3,grace.davis@example.com,-305690673,Poor,TRUE
+EMP1269,David,Williams,25,Sales-Florida,Active,12/9/2022,94031.77,david.williams@example.com,-4716392822,Excellent,TRUE
+EMP1270,Grace,Miller,30,DevOps-New York,Active,3/18/2023,116374.36,grace.miller@example.com,-4143637188,Excellent,FALSE
+EMP1271,Alice,Garcia,40,HR-Florida,Active,4/25/2022,98335.02,alice.garcia@example.com,-2392312603,Excellent,FALSE
+EMP1272,Heidi,Garcia,25,DevOps-New York,Pending,2/28/2021,89262.07,heidi.garcia@example.com,-3260931065,Poor,TRUE
+EMP1273,Heidi,Garcia,,Finance-California,Active,7/30/2022,113848.69,heidi.garcia@example.com,-8433567085,Excellent,TRUE
+EMP1274,Frank,Smith,35,Sales-Florida,Active,5/19/2021,69530.45,frank.smith@example.com,-414545634,Poor,TRUE
+EMP1275,Eva,Brown,35,DevOps-New York,Pending,12/14/2023,84230.22,eva.brown@example.com,-200053473,Good,TRUE
+EMP1276,Eva,Smith,35,Cloud Tech-Illinois,Pending,1/17/2023,76578.59,eva.smith@example.com,-9162475540,Average,FALSE
+EMP1277,Frank,Miller,30,HR-Texas,Inactive,1/2/2024,55532.06,frank.miller@example.com,-1082555988,Excellent,TRUE
+EMP1278,Eva,Smith,40,Admin-New York,Pending,7/9/2021,115311.68,eva.smith@example.com,-5343961128,Excellent,TRUE
+EMP1279,Charlie,Johnson,25,Sales-Nevada,Pending,5/5/2021,66972.06,charlie.johnson@example.com,-1093371188,Good,TRUE
+EMP1280,David,Brown,30,Cloud Tech-Texas,Inactive,11/7/2021,100215.06,david.brown@example.com,-5473820235,Average,TRUE
+EMP1281,Charlie,Brown,25,Sales-New York,Inactive,8/30/2023,115452.25,charlie.brown@example.com,-8485571616,Poor,FALSE
+EMP1282,Heidi,Miller,30,HR-California,Inactive,8/15/2023,54141.38,heidi.miller@example.com,-6880294239,Average,FALSE
+EMP1283,David,Davis,,DevOps-Nevada,Active,12/24/2020,79251.95,david.davis@example.com,-9036788126,Good,FALSE
+EMP1284,Alice,Johnson,40,Finance-New York,Pending,11/21/2024,114822.78,alice.johnson@example.com,-8686694319,Good,TRUE
+EMP1285,Alice,Williams,35,Sales-Illinois,Active,11/17/2021,69919.32,alice.williams@example.com,-2939087883,Average,TRUE
+EMP1286,Heidi,Smith,30,Sales-Florida,Inactive,1/29/2021,106616.97,heidi.smith@example.com,-4344812307,Poor,FALSE
+EMP1287,Heidi,Jones,35,DevOps-New York,Active,2/17/2024,73597.85,heidi.jones@example.com,-3402424032,Poor,TRUE
+EMP1288,David,Smith,30,Sales-Nevada,Inactive,8/20/2024,79939.23,david.smith@example.com,-8105955183,Excellent,TRUE
+EMP1289,Grace,Garcia,25,Admin-New York,Inactive,10/24/2021,N/A,grace.garcia@example.com,-2694500533,Poor,FALSE
+EMP1290,Grace,Smith,30,Finance-California,Inactive,9/10/2021,90772.25,grace.smith@example.com,-2408916497,Average,FALSE
+EMP1291,Eva,Williams,35,DevOps-New York,Active,9/29/2023,58275.74,eva.williams@example.com,-3735439626,Good,FALSE
+EMP1292,Grace,Smith,,DevOps-California,Pending,8/28/2020,94709.79,grace.smith@example.com,-3652717271,Excellent,FALSE
+EMP1293,Frank,Johnson,,Admin-New York,Active,9/6/2022,60722.99,frank.johnson@example.com,-2397240421,Excellent,TRUE
+EMP1294,Frank,Johnson,40,DevOps-Illinois,Inactive,3/31/2024,87626.24,frank.johnson@example.com,-6931216375,Good,TRUE
+EMP1295,David,Brown,30,DevOps-Illinois,Active,12/12/2022,81272.36,david.brown@example.com,-1820916600,Poor,FALSE
+EMP1296,Bob,Miller,,Cloud Tech-Texas,Pending,11/1/2022,64150.97,bob.miller@example.com,-23142899,Good,TRUE
+EMP1297,Charlie,Davis,35,Sales-Florida,Active,10/25/2023,64378.1,charlie.davis@example.com,-1851327971,Poor,FALSE
+EMP1298,Bob,Jones,,Finance-Texas,Inactive,9/27/2020,85927.35,bob.jones@example.com,-4572308480,Good,FALSE

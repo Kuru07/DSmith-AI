@@ -135,14 +135,13 @@ DSmith AI/
 │
 ├── tests/                        # Test suite
 │   ├── __init__.py
-│   ├── sample_data.csv           # Sample raw dataset
-│   ├── cleaned.csv               # Pre-cleaned dataset (for ML-only tests)
-│   ├── test_tools.py             # Unit tests for dataset tools
-│   ├── test_agent.py             # Tests for data agent functions
-│   ├── test_graph.py             # End-to-end cleaning graph test
-│   ├── test_ml_agent.py          # Full end-to-end pipeline test (cleaning + ML)
-│   ├── test_ml_agent_only.py     # ML pipeline test only (skips cleaning)
-│   └── test_saved_training.py    # Re-runs a saved training script without LLM calls
+│   ├── data/
+│   │   └── sample_employee.csv   # Shared sample dataset for all tests
+│   ├── test_cleaning.py          # Unit tests for dataset inspection (no LLM)
+│   ├── test_agent.py             # Unit tests for the data cleaning agent (LLM)
+│   ├── test_ml_agent.py          # Unit tests for the ML agent (LLM)
+│   ├── test_graph.py             # Integration test — full LangGraph pipeline (LLM)
+│   └── test_end_to_end.py        # HTTP integration tests via FastAPI TestClient (LLM)
 │
 ├── uploads/                      # Uploaded CSVs saved here (git-ignored)
 └── workspace/                    # Auto-generated per-job workspaces (git-ignored)
@@ -175,7 +174,7 @@ All Pydantic models used as structured output schemas for LLM responses, plus th
 
 ### `agent/data_agent.py`
 
-LLM-powered functions for the **data cleaning** stage. All cleaning and repair prompts now include explicit **target-leakage-prevention rules** — the target column is never imputed, never dropped, and never used as a feature-engineering source.
+LLM-powered functions for the **data cleaning** stage. All cleaning and repair prompts include explicit **target-leakage-prevention rules** — the target column is never imputed, never dropped, and never used as a feature-engineering source.
 
 | Function | Description |
 |---|---|
@@ -353,13 +352,23 @@ print("Workspace:      ", result["workspace"])
 
 ## Running Tests
 
-| Command | Description |
-|---|---|
-| `python -m tests.test_ml_agent` | Full end-to-end pipeline (cleaning + ML, uses LLM) |
-| `python -m tests.test_ml_agent_only` | ML pipeline only — uses a pre-cleaned CSV, skips cleaning LLM calls |
-| `python -m tests.test_saved_training` | Re-executes a saved training script — zero LLM calls |
-| `python -m tests.test_graph` | Cleaning graph only |
-| `python -m tests.test_tools` | Dataset inspection and code execution unit tests |
+Run the full test suite with pytest from the project root:
+
+```bash
+pytest tests/ -v
+```
+
+Individual test modules and what they cover:
+
+| File | LLM Calls | Description |
+|---|---|---|
+| `tests/test_cleaning.py` | ❌ None | Fast unit tests for `inspect_dataset` — validates CSV profiling |
+| `tests/test_agent.py` | ✅ Yes | Tests data cleaning code generation via Gemini |
+| `tests/test_ml_agent.py` | ✅ Yes | Tests ML problem detection and training code generation |
+| `tests/test_graph.py` | ✅ Yes | Full LangGraph pipeline integration test (cleaning + ML) |
+| `tests/test_end_to_end.py` | ✅ Yes | HTTP-level integration tests via FastAPI `TestClient` |
+
+> **Note:** Tests marked with ✅ make real Gemini LLM calls and execute generated code in subprocesses. They can take several minutes to complete.
 
 ---
 
@@ -372,6 +381,8 @@ Interactive docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ### `GET /`
 
+Returns service identity and status.
+
 ```json
 {
   "name": "DSmith AI",
@@ -383,6 +394,8 @@ Interactive docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 ---
 
 ### `GET /health`
+
+Lightweight health check — returns `200` when the server is up.
 
 ```json
 { "status": "healthy" }
@@ -459,7 +472,8 @@ print(response.json())
 
 | Status | Condition |
 |---|---|
-| `400` | No file provided, non-CSV file, empty target, or target column not found in dataset |
+| `400` | No file provided, non-CSV file, empty target, file exceeds 20 MB, or target column not found in dataset |
+| `413` | Uploaded file exceeds the 20 MB size limit |
 | `500` | Agent failed to complete analysis, or unexpected internal error |
 
 **Error `400` — target not found:**
@@ -496,6 +510,7 @@ print(response.json())
 | Schema Validation | Pydantic v2 |
 | Code Safety | Python `ast` module |
 | Environment | python-dotenv |
+| Testing | pytest + FastAPI TestClient |
 
 ---
 

@@ -2,6 +2,7 @@
 import json
 from typing import TypedDict, Optional
 from pathlib import Path
+import shutil
 
 # pyrefly: ignore [missing-import]
 from langgraph.graph import (
@@ -646,25 +647,36 @@ def run_autonomous_cleaning(
         file_path
     )
 
-    input_path = (
-        workspace / "input.csv"
-    )
 
-    initial_state: AgentState = {
-        "input_path": str(input_path),
-        "workspace": str(workspace),
-        "cleaning_retry_count": 0,
-        "max_cleaning_retries": 3,
-        "target_column": target_column,
-        "training_retry_count": 0,
-        "max_training_retries": 3,
-        
-        "success": False
-    }
+    try:
+        input_path =( workspace / "input.csv")
 
-    result = graph.invoke(
-        initial_state
-    )
+        initial_state: AgentState = {
+            "input_path": str(input_path),
+            "workspace": str(workspace),
+            "target_column": target_column,
 
-    return result
+            "cleaning_retry_count": 0,
+            "max_cleaning_retries": 3,
+
+            "training_retry_count": 0,
+            "max_training_retries": 3,
+
+            "success": False,
+        }
+
+        result = graph.invoke(initial_state)
+
+        return result
+
+    finally:
+        if workspace.exists():
+            shutil.rmtree(
+                workspace,
+                ignore_errors=False
+            )
+
+            print(
+                f"[CLEANUP] Deleted workspace: {workspace}"
+            )
 

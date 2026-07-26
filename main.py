@@ -1,3 +1,17 @@
+"""
+main.py — DSmith AI FastAPI Application Entry Point
+
+Defines the HTTP API for the DSmith AI autonomous data science agent.
+Handles file upload validation, dataset inspection, and dispatches the
+full cleaning + ML training pipeline via the LangGraph agent graph.
+
+Endpoints:
+    GET  /         → Service identity and status
+    GET  /health   → Health check
+    POST /analyze  → Full autonomous cleaning + ML pipeline
+"""
+
+from typing import final
 import shutil
 from pathlib import Path
 from uuid import uuid4
@@ -13,6 +27,8 @@ from fastapi import (
 from agent.graph import run_autonomous_cleaning
 from tools.dataset_tools import inspect_dataset
 
+# Maximum allowed upload size: 20 MB
+MAX_FILE_SIZE = 20 * 1024 * 1024  # 20 MB
 
 app = FastAPI(
     title="DSmith AI",
@@ -27,6 +43,7 @@ app = FastAPI(
 
 @app.get("/")
 def root():
+    """Return service identity and running status."""
     return {
         "name": "DSmith AI",
         "status": "running",
@@ -40,6 +57,7 @@ def root():
 
 @app.get("/health")
 def health():
+    """Lightweight health check — returns 200 when the server is up."""
     return {
         "status": "healthy"
     }
@@ -48,6 +66,7 @@ def health():
 # ---------------------------------------------------------
 # ANALYZE DATASET
 # ---------------------------------------------------------
+
 
 @app.post("/analyze")
 def analyze_dataset(
@@ -72,7 +91,7 @@ def analyze_dataset(
     """
 
     # -----------------------------------------------------
-    # 1. Validate filename
+    # 1. Validate filename — reject requests with no file
     # -----------------------------------------------------
 
     if not file.filename:
@@ -82,7 +101,7 @@ def analyze_dataset(
         )
 
     # -----------------------------------------------------
-    # 2. Validate file type
+    # 2. Validate file type — only CSV is accepted
     # -----------------------------------------------------
 
     extension = Path(file.filename).suffix.lower()
@@ -94,7 +113,7 @@ def analyze_dataset(
         )
 
     # -----------------------------------------------------
-    # 3. Validate target
+    # 3. Validate target — must not be blank
     # -----------------------------------------------------
 
     target_column = target_column.strip()
@@ -106,7 +125,7 @@ def analyze_dataset(
         )
 
     # -----------------------------------------------------
-    # 4. Create uploads directory
+    # 4. Create uploads directory if it does not exist
     # -----------------------------------------------------
 
     upload_dir = Path("uploads")
@@ -117,20 +136,19 @@ def analyze_dataset(
     )
 
     # -----------------------------------------------------
-    # 5. Generate unique filename
+    # 5. Generate a unique filename to prevent collisions
+    #    between concurrent uploads
     # -----------------------------------------------------
 
     upload_id = str(uuid4())
 
-    upload_path = (
-        upload_dir
-        / f"{upload_id}.csv"
-    )
+    upload_path = upload_dir / f"{upload_id}.csv"
+    
 
     try:
 
         # -------------------------------------------------
-        # 6. Save uploaded CSV
+        # 6. Save the uploaded CSV to disk
         # -------------------------------------------------
 
         with upload_path.open("wb") as buffer:
@@ -139,8 +157,20 @@ def analyze_dataset(
                 buffer,
             )
 
+        file_size = upload_path.stat().st_size
+
+        # Reject files that exceed the size limit
+        if file_size > MAX_FILE_SIZE:
+            upload_path.unlink(missing_ok=True)
+
+            raise HTTPException(
+                status_code=413,
+                detail="File too large. Maximum allowed size is 20 MB.",
+            )
+
         # -------------------------------------------------
-        # 7. Inspect dataset before running agent
+        # 7. Inspect dataset before running the agent
+        #    — confirms the file is a valid, parseable CSV
         # -------------------------------------------------
 
         try:
@@ -162,7 +192,7 @@ def analyze_dataset(
             )
 
         # -------------------------------------------------
-        # 8. Get available columns
+        # 8. Extract column names from the dataset profile
         # -------------------------------------------------
 
         columns = profile.get(
@@ -176,7 +206,8 @@ def analyze_dataset(
         ]
 
         # -------------------------------------------------
-        # 9. Validate target exists
+        # 9. Validate that the requested target column
+        #    actually exists in the uploaded dataset
         # -------------------------------------------------
 
         if target_column not in column_names:
@@ -196,7 +227,8 @@ def analyze_dataset(
             )
 
         # -------------------------------------------------
-        # 10. Run autonomous agent
+        # 10. Dispatch the autonomous LangGraph agent
+        #     — runs the full cleaning + ML pipeline
         # -------------------------------------------------
 
         print("\n================================")
@@ -210,14 +242,17 @@ def analyze_dataset(
         print(
             f"Target: {target_column}"
         )
+        print(str(upload_path))
 
         result = run_autonomous_cleaning(
             file_path=str(upload_path),
             target_column=target_column,
         )
 
+
         # -------------------------------------------------
-        # 11. Handle agent failure
+        # 11. Handle agent-level failure
+        #     — the graph ran but could not complete
         # -------------------------------------------------
 
         if not result.get("success"):
@@ -243,7 +278,7 @@ def analyze_dataset(
             )
 
         # -------------------------------------------------
-        # 12. Successful API response
+        # 12. Return the structured success response
         # -------------------------------------------------
 
         print("\n================================")
@@ -253,12 +288,14 @@ def analyze_dataset(
         return {
             "success": True,
 
+            # Original upload metadata
             "original_filename":
                 file.filename,
 
             "target_column":
                 target_column,
 
+            # ML problem classification
             "problem_type":
                 result.get(
                     "problem_type"
@@ -269,6 +306,7 @@ def analyze_dataset(
                     "problem_reasoning"
                 ),
 
+            # Model selection and evaluation
             "selected_models":
                 result.get(
                     "selected_models"
@@ -284,6 +322,7 @@ def analyze_dataset(
                     "metrics"
                 ),
 
+            # Cleaning stage diagnostics
             "cleaning": {
 
                 "summary":
@@ -296,6 +335,7 @@ def analyze_dataset(
                         "cleaning_plan"
                     ),
 
+                # Number of LLM repair attempts needed
                 "retries":
                     result.get(
                         "cleaning_retry_count",
@@ -303,8 +343,10 @@ def analyze_dataset(
                     ),
             },
 
+            # Training stage diagnostics
             "training": {
 
+                # Number of LLM repair attempts needed
                 "retries":
                     result.get(
                         "training_retry_count",
@@ -314,14 +356,16 @@ def analyze_dataset(
         }
 
     # -----------------------------------------------------
-    # Preserve our HTTP errors
+    # Re-raise our own HTTP errors unchanged so FastAPI
+    # returns the correct status code to the caller
     # -----------------------------------------------------
 
     except HTTPException:
         raise
 
     # -----------------------------------------------------
-    # Unexpected server errors
+    # Catch unexpected server errors and return a clean
+    # 500 without leaking internal tracebacks
     # -----------------------------------------------------
 
     except Exception as exc:
@@ -336,9 +380,16 @@ def analyze_dataset(
         )
 
     # -----------------------------------------------------
-    # Always close uploaded file
+    # Always close the uploaded file handle and remove
+    # temporary files regardless of success or failure
     # -----------------------------------------------------
-
     finally:
 
         file.file.close()
+
+        if upload_path.exists():
+            upload_path.unlink()
+
+            print(
+                f"[CLEANUP] Deleted upload: {upload_path}"
+            )
